@@ -10,6 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@apps-in-toss/web-framework": "^3.4.0",
+    "@emotion/react": "^11.14.0",
+    "@toss/tds-mobile": "^2.5.1",
+    "@toss/tds-mobile-ait": "^2.5.1",
     "@underscore/shared": "workspace:*",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
