@@ -1,0 +1,59 @@
+/* TDS owns component typography, spacing, shapes, states and colors.
+   These styles only position the preview, custom data charts and stock initials. */
+:root { color-scheme: light; }
+.design-workspace {
+  /* Public TDS foundation colors, shared by the custom chart and preview chrome. */
+  --red500: #f04452;
+  --blue500: #3182f6;
+  --grey200: #e5e8eb;
+  --grey300: #d1d6db;
+  --grey500: #8b95a1;
+  --grey600: #6b7684;
+  background: #f2f4f6;
+}
+body { margin: 0; background: #f2f4f6; }
+.design-workspace { display: grid; grid-template-columns: 272px minmax(320px, 430px); justify-content: center; gap: 64px; padding: 40px 28px; min-height: 100vh; align-items: start; }
+.design-sidebar { position: sticky; top: 40px; padding-top: 26px; color: var(--adaptiveGrey900); }
+.design-label { color: var(--grey500); font-size: 12px; letter-spacing: .08em; font-weight: 600; }
+.design-sidebar h1 { font-size: 28px; line-height: 1.45; letter-spacing: -.7px; margin: 18px 0 14px; }
+.design-sidebar p { font-size: 14px; line-height: 1.8; color: var(--grey600); margin: 0 0 24px; }
+.screen-links { display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0 36px; }
+.design-details { border-top: 1px solid var(--grey200); padding-top: 24px; }
+.design-details h2 { font-size: 13px; font-weight: 600; margin: 0 0 8px; }
+.design-sidebar a { color: var(--blue500); font-size: 13px; text-decoration: none; }
+.design-sidebar .preview-footnote { margin-top: 32px; font-size: 12px; color: var(--grey500); }
+.app-surface { position: relative; transform: translateZ(0); display: flex; flex-direction: column; width: 100%; height: min(870px, calc(100dvh - 80px)); min-height: 630px; background: white; border-radius: 20px; box-shadow: 0 16px 48px #191f280c; overflow: hidden; }
+.preview-ribbon { background: #f9fafb; color: #8b95a1; text-align: center; font-size: 11px; padding: 7px 12px; flex: 0 0 auto; }
+.app-scroll { overflow-y: auto; flex: 1; min-height: 0; scrollbar-width: thin; scrollbar-color: #e5e8eb transparent; overscroll-behavior: contain; }
+.cta-slot { flex: 0 0 auto; background: white; }
+.quick-order { width: 100%; box-sizing: border-box; padding: 12px 24px 8px; display: grid; gap: 10px; }
+.quantity-row, .judgment-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.judgment-processing, .judgment-success { display: flex; align-items: center; gap: 12px; }
+.judgment-processing [data-tds-mobile-component="Loader"], .judgment-success [data-tds-mobile-component="Asset.Image"] { flex: 0 0 auto; }
+.execution-wait { padding: 24px; text-align: center; }
+.rows { list-style: none; margin: 0; padding: 0; }
+.inset, .copy { padding: 0 24px; }
+.stock-initial { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; font-size: 17px; font-weight: 600; background: #e8f3ff; color: #3182f6; }
+.initial-1 { background: #e5f8ef; color: #029d5e; }
+.initial-2 { background: #f3edff; color: #865acb; }
+.price-chart { margin: 0 24px 12px; }
+.price-chart svg { display: block; width: 100%; height: auto; }
+.comparison { padding: 8px 24px 16px; display: grid; gap: 16px; }
+.comparison-row { display: grid; grid-template-columns: 90px minmax(20px, 1fr) 52px; align-items: center; gap: 8px; }
+.bar-track { background: #f2f4f6; height: 8px; border-radius: 4px; overflow: hidden; }
+.bar-track > div { height: 100%; border-radius: 4px; }
+.loading-icon { min-height: 120px; display: grid; place-items: center; }
+.preview-notice { padding: 20px 24px; background: #f2f4f6; }
+@media (max-width: 780px) {
+  .design-workspace { display: flex; flex-direction: column; padding: 0; gap: 0; align-items: center; }
+  .design-sidebar { position: static; width: min(100%, 430px); padding: 20px 24px; box-sizing: border-box; }
+  .design-sidebar h1 { font-size: 20px; margin: 8px 0; }
+  .design-sidebar h1 br { display: none; }
+  .design-sidebar > p, .design-details, .design-sidebar > a { display: none; }
+  .screen-links { margin: 14px 0 0; gap: 6px; }
+  .app-surface { max-width: 430px; height: 800px; min-height: 630px; border-radius: 0; }
+}
+@media (max-width: 480px) {
+  .design-sidebar { display: none; }
+  .app-surface { height: 100dvh; min-height: 0; max-width: none; box-shadow: none; }
+}
