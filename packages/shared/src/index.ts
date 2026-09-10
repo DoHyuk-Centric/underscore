@@ -1,1 +1,1 @@
-export * from './schemas/order.js';
+export * from './schemas/stock.js';
