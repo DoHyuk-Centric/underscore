@@ -1,8 +1,8 @@
 import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import { KRXStock } from '@underscore/shared';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { KrxApiClient } from './krx-api.client.js';
-import { KrxStockMapper } from './krx-stock.mapper.js';
+import { KrxApiClient } from './clients/krx-api.client.js';
+import { KrxStockMapper } from './mappers/krx-stock.mapper.js';
 import { StockStore } from './stock.store.js';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { KRXStock, stockSchema } from '@underscore/shared';
-import type { KrxListedInfoItem } from './krx-api.client.js';
+import type { KrxListedInfoItem } from '../clients/krx-api.client.js';
 
 @Injectable()
 export class KrxStockMapper {

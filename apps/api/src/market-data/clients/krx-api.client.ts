@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { getYesterdayKstBasDt } from './kst-date.util.js';
+import { getYesterdayKstBasDt } from '../utils/kst-date.util.js';
 
 const KRX_API_URL =
   'https://apis.data.go.kr/1160100/GetKrxListedInfoService_V2/getItemInfo_V2';

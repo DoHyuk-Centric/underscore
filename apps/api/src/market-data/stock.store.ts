@@ -16,8 +16,11 @@ export class StockStore {
   search(query: string): KRXStock[] {
     const normalized = query.trim().toLowerCase().replace(/\s+/g, '');
     if (!normalized) return [];
-    return this.stocks.filter((stock) =>
-      stock.name.toLowerCase().replace(/\s+/g, '').includes(normalized),
-    );
+    return this.stocks.filter((stock) => {
+      const searchableFields = [stock.name, stock.stockCode, stock.corpName];
+      return searchableFields.some((field) =>
+        field.toLowerCase().replace(/\s+/g, '').includes(normalized),
+      );
+    });
   }
 }
