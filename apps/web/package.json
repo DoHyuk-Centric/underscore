@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev:ait": "vite --mode ait",
+    "build": "tsc -b && vite build && ait build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "ait deploy"
   },
   "dependencies": {
     "@apps-in-toss/web-framework": "^3.4.0",
@@ -30,6 +32,7 @@
     "oxlint": "^1.79.0",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.2",
-    "vite": "^8.2.2"
+    "vite": "^8.2.2",
+    "@apps-in-toss/devtools": "^3.2.0"
   }
 }

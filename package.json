@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev:web": "cd apps/web && node_modules/.bin/vite",
+    "dev:web": "pnpm --filter web dev",
+    "dev:web:ait": "pnpm --filter web dev:ait",
     "dev:api": "pnpm --filter api start:dev",
     "build": "pnpm -r build",
     "lint": "pnpm -r lint"
