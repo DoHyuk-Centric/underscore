@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { TDSMobileAITProvider } from '@toss/tds-mobile-ait'
+import { SearchBar } from './components/SearchBar/SearchBar'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
@@ -9,6 +11,11 @@ function App() {
 
   return (
     <>
+      {/* TEMP: SearchBar 미리보기 — 푸시 전 제거 */}
+      <TDSMobileAITProvider>
+        <SearchBar aria-label="검색" />
+      </TDSMobileAITProvider>
+
       <section id="center">
         <div className="hero">
           <img src={heroImg} className="base" width="170" height="179" alt="" />
