@@ -5,7 +5,8 @@ import { AppService } from './app.service.js';
 import { AuthModule } from './auth/auth.module.js';
 import { TradingModule } from './trading/trading.module.js';
 import { PortfolioModule } from './portfolio/portfolio.module.js';
-import { MarketDataModule } from './market-data/market-data.module.js';
+import { StockSearchModule } from './stock-search/stock-search.module.js';
+import { PopularStocksModule } from './popular-stocks/popular-stocks.module.js';
 import { PriceStreamModule } from './price-stream/price-stream.module.js';
 import { DisclosureModule } from './disclosure/disclosure.module.js';
 import { ReviewModule } from './review/review.module.js';
@@ -19,7 +20,8 @@ import { ReviewModule } from './review/review.module.js';
     AuthModule,
     TradingModule,
     PortfolioModule,
-    MarketDataModule,
+    StockSearchModule,
+    PopularStocksModule,
     PriceStreamModule,
     DisclosureModule,
     ReviewModule,

@@ -12,15 +12,10 @@ export type KrxTradingItem = {
 };
 
 function toNumber(value?: string): number {
-  if (!value) return 0;
-
-  return Number(value.replaceAll(',', '').replaceAll('%', '')) || 0;
+  return Number(value?.replaceAll(',', '').replaceAll('%', '') ?? 0) || 0;
 }
 
-export function toPopularStock(
-  item: KrxTradingItem,
-  rank: number,
-): PopularStock {
+export function toPopularStock(item: KrxTradingItem, rank: number): PopularStock {
   return {
     rank,
     stockCode: item.ISU_CD ?? '',
