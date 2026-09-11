@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Skeleton } from '@toss/tds-mobile'
 import type { KRXStock } from '@underscore/shared'
 import { NoSearchResults } from './NoSearchResults'
+import { SearchErrorState } from './SearchErrorState'
 import { SearchHint } from './SearchHint'
 import { MIN_QUERY_LENGTH } from '../hooks/useStockSearch'
 
@@ -44,11 +45,7 @@ export function StockSearchResults({
     }
 
     if (error) {
-      return (
-        <p className="flex-1 flex items-center justify-center text-center text-[#f04452] text-sm -translate-y-8">
-          {error}
-        </p>
-      )
+      return <SearchErrorState />
     }
 
     if (stocks.length === 0) {

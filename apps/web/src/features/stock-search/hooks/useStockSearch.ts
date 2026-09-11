@@ -4,6 +4,12 @@ import { searchStocks } from "../api/stock-api";
 
 type StockSearchState = {
   stocks: KRXStock[];
+  error: string | null;
+  resolvedQuery: string;
+};
+
+type StockSearchResult = {
+  stocks: KRXStock[];
   isLoading: boolean;
   error: string | null;
 };
@@ -11,11 +17,11 @@ type StockSearchState = {
 const DEBOUNCE_MS = 300;
 export const MIN_QUERY_LENGTH = 2;
 
-export function useStockSearch(query: string): StockSearchState {
+export function useStockSearch(query: string): StockSearchResult {
   const [state, setState] = useState<StockSearchState>({
     stocks: [],
-    isLoading: false,
     error: null,
+    resolvedQuery: "",
   });
 
   useEffect(() => {
@@ -25,19 +31,17 @@ export function useStockSearch(query: string): StockSearchState {
       return;
     }
 
-    setState((current) => ({ ...current, isLoading: true, error: null }));
-
     const controller = new AbortController();
     const debounceTimer = window.setTimeout(async () => {
       try {
         const stocks = await searchStocks(normalizedQuery, controller.signal);
-        setState({ stocks, isLoading: false, error: null });
+        setState({ stocks, error: null, resolvedQuery: normalizedQuery });
       } catch (error) {
         if (controller.signal.aborted) return;
 
         setState({
           stocks: [],
-          isLoading: false,
+          resolvedQuery: normalizedQuery,
           error:
             error instanceof Error
               ? error.message
@@ -52,9 +56,15 @@ export function useStockSearch(query: string): StockSearchState {
     };
   }, [query]);
 
-  if (query.trim().length < MIN_QUERY_LENGTH) {
+  const normalizedQuery = query.trim();
+
+  if (normalizedQuery.length < MIN_QUERY_LENGTH) {
     return { stocks: [], isLoading: false, error: null };
   }
 
-  return state;
+  if (normalizedQuery !== state.resolvedQuery) {
+    return { stocks: [], isLoading: true, error: null };
+  }
+
+  return { stocks: state.stocks, isLoading: false, error: state.error };
 }
