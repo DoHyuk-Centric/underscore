@@ -1,56 +1,70 @@
-import { useEffect, useState } from 'react'
-import type { KRXStock } from '@underscore/shared'
-import { searchStocks } from '../api/stock-api'
+import { useEffect, useState } from "react";
+import type { KRXStock } from "@underscore/shared";
+import { searchStocks } from "../api/stock-api";
 
 type StockSearchState = {
-  stocks: KRXStock[]
-  isLoading: boolean
-  error: string | null
-}
+  stocks: KRXStock[];
+  error: string | null;
+  resolvedQuery: string;
+};
 
-const DEBOUNCE_MS = 250
+type StockSearchResult = {
+  stocks: KRXStock[];
+  isLoading: boolean;
+  error: string | null;
+};
 
-export function useStockSearch(query: string): StockSearchState {
+const DEBOUNCE_MS = 300;
+export const MIN_QUERY_LENGTH = 2;
+
+export function useStockSearch(query: string): StockSearchResult {
   const [state, setState] = useState<StockSearchState>({
     stocks: [],
-    isLoading: false,
     error: null,
-  })
+    resolvedQuery: "",
+  });
 
   useEffect(() => {
-    const normalizedQuery = query.trim()
+    const normalizedQuery = query.trim();
 
-    if (!normalizedQuery) {
-      return
+    if (normalizedQuery.length < MIN_QUERY_LENGTH) {
+      return;
     }
 
-    const controller = new AbortController()
-    const timer = window.setTimeout(async () => {
-      setState((current) => ({ ...current, isLoading: true, error: null }))
-
+    const controller = new AbortController();
+    const debounceTimer = window.setTimeout(async () => {
       try {
-        const stocks = await searchStocks(normalizedQuery, controller.signal)
-        setState({ stocks, isLoading: false, error: null })
+        const stocks = await searchStocks(normalizedQuery, controller.signal);
+        setState({ stocks, error: null, resolvedQuery: normalizedQuery });
       } catch (error) {
-        if (controller.signal.aborted) return
+        if (controller.signal.aborted) return;
 
         setState({
           stocks: [],
-          isLoading: false,
-          error: error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.',
-        })
+          resolvedQuery: normalizedQuery,
+          error:
+            error instanceof Error
+              ? error.message
+              : "알 수 없는 오류가 발생했습니다.",
+        });
       }
-    }, DEBOUNCE_MS)
+    }, DEBOUNCE_MS);
 
     return () => {
-      controller.abort()
-      window.clearTimeout(timer)
-    }
-  }, [query])
+      controller.abort();
+      window.clearTimeout(debounceTimer);
+    };
+  }, [query]);
 
-  if (!query.trim()) {
-    return { stocks: [], isLoading: false, error: null }
+  const normalizedQuery = query.trim();
+
+  if (normalizedQuery.length < MIN_QUERY_LENGTH) {
+    return { stocks: [], isLoading: false, error: null };
   }
 
-  return state
+  if (normalizedQuery !== state.resolvedQuery) {
+    return { stocks: [], isLoading: true, error: null };
+  }
+
+  return { stocks: state.stocks, isLoading: false, error: state.error };
 }

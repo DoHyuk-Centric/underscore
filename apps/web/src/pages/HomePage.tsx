@@ -8,15 +8,20 @@ function HomePage() {
   const [query, setQuery] = useState("");
   const searchState = useStockSearch(query);
 
+  const isSearching = Boolean(query.trim());
+
   return (
     <main className="flex flex-col min-h-full px-2 pb-6 bg-[#f7f8fa]">
-      <section className="relative z-1 bg-white rounded-[20px] mt-4 py-1" aria-label="종목 검색">
+      <section
+        className="relative z-1 flex flex-col flex-1 min-h-0 bg-white rounded-[20px] mt-4 py-1"
+        aria-label="종목 검색"
+      >
         <StockSearchBar
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           onDeleteClick={() => setQuery("")}
         />
-        {query.trim() ? <StockSearchResults query={query} {...searchState} /> : <PopularStocks />}
+        {isSearching ? <StockSearchResults query={query} {...searchState} /> : <PopularStocks />}
       </section>
     </main>
   );
