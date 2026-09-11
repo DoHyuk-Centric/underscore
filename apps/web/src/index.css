@@ -213,19 +213,88 @@ body {
   text-align: right;
 }
 
-.home-intro {
-  padding: 8px 0 28px;
+.popular-stocks {
+  overflow: hidden;
+  border-radius: 18px;
+  background: #fff;
 }
 
-.home-eyebrow {
-  margin: 0 0 12px;
-  color: #8b95a1;
-  font-size: 12px;
+.popular-stocks__tabs {
+  padding: 0 8px;
+}
+
+.popular-stocks__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.popular-stocks__extra {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows .3s ease, opacity .2s ease;
+}
+
+.popular-stocks__extra > .popular-stocks__list {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.popular-stocks__extra--open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.popular-stocks__rank {
+  display: inline-block;
+  width: 20px;
+  color: #6b7684;
+  font-size: 15px;
   font-weight: 700;
-  letter-spacing: .02em;
+  text-align: center;
 }
 
-.home-intro h1 {
+.popular-stocks__identity,
+.popular-stocks__quote {
+  display: grid;
+  gap: 4px;
+}
+
+.popular-stocks__identity strong,
+.popular-stocks__quote strong {
+  color: #191f28;
+  font-size: 15px;
+}
+
+.popular-stocks__identity small,
+.popular-stocks__quote small {
+  font-size: 12px;
+}
+
+.popular-stocks__identity small {
+  color: #8b95a1;
+}
+
+.popular-stocks__quote {
+  text-align: right;
+}
+
+.stock-change--up {
+  color: #f04452;
+}
+
+.stock-change--down {
+  color: #3182f6;
+}
+
+.guide-page {
+  min-height: 100dvh;
+  padding: 24px;
+  background: #f7f8fa;
+}
+
+.guide-intro h1 {
   margin: 0;
   color: #191f28;
   font-size: 28px;
@@ -234,82 +303,8 @@ body {
   line-height: 1.35;
 }
 
-.home-intro > p:last-child {
+.guide-intro p {
   margin: 14px 0 0;
   color: #6b7684;
   font-size: 14px;
-}
-
-.home-primary-action {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  border: 0;
-  border-radius: 18px;
-  padding: 20px;
-  background: #191f28;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.home-primary-action span {
-  font-size: 22px;
-  font-weight: 400;
-}
-
-.home-replays {
-  padding-top: 42px;
-}
-
-.home-section-heading {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-}
-
-.home-section-heading h2 {
-  margin: 0;
-  color: #191f28;
-  font-size: 18px;
-  letter-spacing: -.04em;
-}
-
-.home-section-heading span {
-  color: #8b95a1;
-  font-size: 12px;
-}
-
-.home-empty-state {
-  margin-top: 16px;
-  padding: 28px 20px;
-  border-radius: 18px;
-  background: #fff;
-  text-align: center;
-}
-
-.home-empty-icon {
-  display: grid;
-  width: 44px;
-  height: 44px;
-  margin: 0 auto 14px;
-  place-items: center;
-  border-radius: 14px;
-  background: #f0f2f4;
-  color: #b0b8c1;
-  font-size: 24px;
-  font-weight: 800;
-}
-
-.home-empty-state strong {
-  color: #4e5968;
-  font-size: 14px;
-}
-
-.home-empty-state p {
-  margin: 8px 0 0;
-  color: #8b95a1;
-  font-size: 12px;
-  line-height: 1.6;
 }
