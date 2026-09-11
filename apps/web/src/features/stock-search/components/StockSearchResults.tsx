@@ -14,30 +14,33 @@ export function StockSearchResults({
   error,
 }: StockSearchResultsProps) {
   if (!query.trim()) {
-    return <p className="stock-search__message">종목명이나 종목코드를 검색해보세요.</p>
+    return <p className="mx-2 mt-3 text-[#6b7684] text-sm">종목명이나 종목코드를 검색해보세요.</p>
   }
 
   if (isLoading) {
-    return <p className="stock-search__message">종목을 검색하고 있습니다...</p>
+    return <p className="mx-2 mt-3 text-[#6b7684] text-sm">종목을 검색하고 있습니다...</p>
   }
 
   if (error) {
-    return <p className="stock-search__message stock-search__message--error">{error}</p>
+    return <p className="mx-2 mt-3 text-[#f04452] text-sm">{error}</p>
   }
 
   if (stocks.length === 0) {
-    return <p className="stock-search__message">검색 결과가 없습니다.</p>
+    return <p className="mx-2 mt-3 text-[#6b7684] text-sm">검색 결과가 없습니다.</p>
   }
 
   return (
-    <ul className="stock-search__results">
+    <ul className="grid gap-2 mt-2.5 p-0 list-none">
       {stocks.map((stock) => (
-        <li className="stock-card" key={stock.isinCode}>
+        <li
+          className="flex items-center justify-between py-3.5 px-4 rounded-[14px] bg-white"
+          key={stock.isinCode}
+        >
           <div>
-            <strong className="stock-card__name">{stock.name}</strong>
-            <span className="stock-card__code">{stock.stockCode}</span>
+            <strong className="block text-[15px]">{stock.name}</strong>
+            <span className="block text-[#8b95a1] text-xs">{stock.stockCode}</span>
           </div>
-          <div className="stock-card__meta">
+          <div className="grid gap-0.75 text-right text-[#8b95a1] text-xs">
             <span>{stock.market}</span>
             <span>{stock.corpName}</span>
           </div>

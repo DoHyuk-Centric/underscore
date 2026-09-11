@@ -49,24 +49,28 @@ export function PopularStocks() {
       const isRising = item.value.startsWith('+')
       const isLast = index === listItems.length - 1
 
+      const changeColorClass = isRising ? 'text-[#f04452]' : 'text-[#3182f6]'
+
       return (
         <ListRow
           key={item.name}
-          left={<span className="popular-stocks__rank">{item.rank}</span>}
+          left={
+            <span className="inline-block w-5 text-[#6b7684] text-[15px] font-bold text-center">
+              {item.rank}
+            </span>
+          }
           contents={
-            <span className="popular-stocks__identity">
-              <strong>{item.name}</strong>
-              <small>{item.detail}</small>
+            <span className="grid gap-1">
+              <strong className="text-[#191f28] text-[15px]">{item.name}</strong>
+              <small className="text-[#8b95a1] text-xs">{item.detail}</small>
             </span>
           }
           right={
-            <span className="popular-stocks__quote">
-              <strong className={isStockTab ? undefined : isRising ? 'stock-change--up' : 'stock-change--down'}>
+            <span className="grid gap-1 text-right">
+              <strong className={`text-[15px] ${isStockTab ? 'text-[#191f28]' : changeColorClass}`}>
                 {item.value}
               </strong>
-              <small className={isRising ? 'stock-change--up' : 'stock-change--down'}>
-                {item.change}
-              </small>
+              <small className={`text-xs ${changeColorClass}`}>{item.change}</small>
             </span>
           }
           border={isLast && !connectsToNext ? 'none' : 'indented'}
@@ -78,9 +82,9 @@ export function PopularStocks() {
     })
 
   return (
-    <section className="popular-stocks" aria-labelledby="popular-list-title">
+    <section aria-labelledby="popular-list-title">
       <SegmentedControl
-        className="popular-stocks__tabs"
+        className="px-2"
         size="small"
         value={selectedTab}
         onChange={changeTab}
@@ -104,7 +108,7 @@ export function PopularStocks() {
         size="medium"
       />
 
-      <ol className="popular-stocks__list">
+      <ol className="m-0 p-0 list-none">
         {renderItems(primaryItems, expanded)}
       </ol>
 
@@ -112,14 +116,15 @@ export function PopularStocks() {
         className={`popular-stocks__extra ${expanded ? 'popular-stocks__extra--open' : ''}`}
         aria-hidden={!expanded}
       >
-        <ol className="popular-stocks__list" start={INITIAL_ITEM_COUNT + 1}>
+        <ol className="m-0 p-0 list-none min-h-0 overflow-hidden" start={INITIAL_ITEM_COUNT + 1}>
           {renderItems(extraItems)}
         </ol>
       </div>
 
-      <ul className="popular-stocks__list">
+      <ul className="m-0 p-0 list-none">
         <ListFooter
           border="none"
+          shadow={<></>}
           aria-expanded={expanded}
           onClick={() => setExpanded((current) => !current)}
         >

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { IconButton } from "@toss/tds-mobile";
 import { StockSearchBar } from "../features/stock-search/components/StockSearchBar";
 import { StockSearchResults } from "../features/stock-search/components/StockSearchResults";
 import { useStockSearch } from "../features/stock-search/hooks/useStockSearch";
@@ -10,35 +9,15 @@ function HomePage() {
   const searchState = useStockSearch(query);
 
   return (
-    <main className="home-screen">
-      <header className="home-header">
-        <div className="home-brand">
-          <img
-            className="home-brand-mark"
-            src="/mitjul-logo-04-black.svg"
-            alt=""
-            aria-hidden="true"
-          />
-          밑줄
-        </div>
-        <IconButton
-          src="/icon-menu.svg"
-          aria-label="메뉴 열기"
-          bgColor="transparent"
-          iconSize={24}
-        />
-      </header>
-
-      <section className="home-search" aria-label="종목 검색">
+    <main className="flex flex-col min-h-full px-2 pb-6 bg-[#f7f8fa]">
+      <section className="relative z-1 bg-white rounded-[20px] mt-4 py-1" aria-label="종목 검색">
         <StockSearchBar
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           onDeleteClick={() => setQuery("")}
         />
-        {query.trim() && <StockSearchResults query={query} {...searchState} />}
+        {query.trim() ? <StockSearchResults query={query} {...searchState} /> : <PopularStocks />}
       </section>
-
-      {!query.trim() && <PopularStocks />}
     </main>
   );
 }
