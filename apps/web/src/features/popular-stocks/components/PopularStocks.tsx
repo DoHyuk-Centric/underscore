@@ -18,7 +18,7 @@ export function PopularStocks() {
   }
 
   return (
-    <section className="relative z-1 flex grow shrink-0 flex-col" aria-labelledby="popular-list-title">
+    <section className="relative z-1 flex flex-1 shrink-0 flex-col" aria-labelledby="popular-list-title">
       <SegmentedControl className="px-2" size="small" value={selectedTab} onChange={changeTab}>
         <SegmentedControl.Item value="stocks">인기 종목</SegmentedControl.Item>
         <SegmentedControl.Item value="sectors">인기 섹터</SegmentedControl.Item>

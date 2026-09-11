@@ -4,7 +4,7 @@ type Props = {
 
 export function PopularStocksError({ onRetry }: Props) {
   return (
-    <div className="flex grow shrink-0 flex-col items-center justify-center gap-2 px-4 py-10 text-center">
+    <div className="flex flex-1 shrink-0 flex-col items-center justify-center gap-2 border px-4 py-10 text-center">
       <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f2f4f6] text-lg font-bold text-[#8b95a1]" aria-hidden="true">
         !
       </span>

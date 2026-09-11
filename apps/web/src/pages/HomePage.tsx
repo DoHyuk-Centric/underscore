@@ -12,7 +12,7 @@ function HomePage() {
 
   return (
     <main className="flex min-h-full flex-col px-2 pb-6 bg-[#f7f8fa]">
-      <section className="mt-3 flex grow shrink-0 flex-col rounded-[20px] bg-white px-3 py-1">
+      <section className="mt-3 flex flex-1 shrink-0 flex-col rounded-[20px] bg-white px-3 py-1">
         <StockSearchBar
           value={query}
           onChange={(event) => setQuery(event.target.value)}
