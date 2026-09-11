@@ -1,14 +1,25 @@
-import { ListRow } from '@toss/tds-mobile'
+import { useEffect } from 'react'
+import { ListRow, Skeleton } from '@toss/tds-mobile'
 import { usePopularStocks } from '../hooks/usePopularStocks'
+import { PopularStocksError } from './PopularStocksError'
+import './PopularList.css'
 
 const INITIAL_ITEM_COUNT = 5
-type Props = { expanded: boolean }
+type Props = { expanded: boolean; onErrorChange?: (hasError: boolean) => void }
 
-export function PopularStockList({ expanded }: Props) {
-  const { stocks, isLoading, error } = usePopularStocks()
+export function PopularStockList({ expanded, onErrorChange }: Props) {
+  const { stocks, isLoading, error, retry } = usePopularStocks()
 
-  if (isLoading) return <p className="p-4 text-center text-[#8b95a1]">인기 종목을 불러오는 중...</p>
-  if (error) return <p className="p-4 text-center text-[#f04452]">인기 종목을 불러오지 못했어요.</p>
+  useEffect(() => {
+    onErrorChange?.(Boolean(error))
+  }, [error, onErrorChange])
+
+  if (isLoading) {
+    return <Skeleton pattern="listOnly" repeatLastItemCount={5} style={{ width: '100%' }} />
+  }
+  if (error) {
+    return <PopularStocksError onRetry={retry} />
+  }
 
   const items = stocks.map((stock) => ({
     ...stock,
@@ -21,16 +32,17 @@ export function PopularStockList({ expanded }: Props) {
     <ol className="m-0 list-none p-0">
       {items.map((item, index) => {
         const color = item.changeRate >= 0 ? 'text-[#f04452]' : 'text-[#3182f6]'
-        const isExtra = index >= INITIAL_ITEM_COUNT
-        const hasDivider = index < items.length - 1
+        const collapsed = index >= INITIAL_ITEM_COUNT && !expanded
 
         return (
           <li
             key={item.stockCode}
-            className={`${hasDivider ? 'border-b border-[#f0f1f3]' : ''} ${isExtra ? `popular-stocks__extra ${expanded ? 'popular-stocks__extra--open' : ''}` : ''}`}
-            aria-hidden={isExtra ? !expanded : undefined}
+            className="popular-list__row"
+            data-collapsed={collapsed}
+            aria-hidden={collapsed || undefined}
           >
-            <div className="min-h-0 overflow-hidden">
+            <div className="popular-list__clip">
+              <div className={index > 0 ? 'border-t border-[#f0f1f3]' : undefined}>
               <ListRow
                 left={<span className="inline-block w-5 text-center text-[15px] font-bold text-[#6b7684]">{item.rank}</span>}
                 contents={<span className="grid gap-1"><strong className="text-[15px] text-[#191f28]">{item.name}</strong><small className="text-xs text-[#8b95a1]">{item.detail}</small></span>}
@@ -40,6 +52,7 @@ export function PopularStockList({ expanded }: Props) {
                 verticalPadding="medium"
                 withTouchEffect
               />
+              </div>
             </div>
           </li>
         )

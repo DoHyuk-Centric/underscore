@@ -1,0 +1,27 @@
+.popular-list__row {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition: grid-template-rows 280ms ease, opacity 200ms ease, visibility 0s;
+}
+
+.popular-list__row[data-collapsed='true'] {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: grid-template-rows 280ms ease, opacity 200ms ease, visibility 0s 280ms;
+}
+
+.popular-list__clip {
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popular-list__row,
+  .popular-list__row[data-collapsed='true'] {
+    transition: none;
+  }
+}

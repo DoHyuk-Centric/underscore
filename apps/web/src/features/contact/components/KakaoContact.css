@@ -1,0 +1,39 @@
+.kakao-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 46px;
+  margin: 24px 8px 0 auto;
+  padding: 7px 17px 7px 8px;
+  border: 1px solid #e9ecef;
+  border-radius: 999px;
+  background: #fff;
+  color: #4e5968;
+  box-shadow: 0 2px 5px rgb(25 31 40 / 3%);
+  font-family: inherit;
+  text-decoration: none;
+}
+
+.kakao-contact:hover {
+  background: #fafafa;
+}
+
+.kakao-contact__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #fee500;
+  color: #302621;
+}
+
+.kakao-contact__label {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+}
