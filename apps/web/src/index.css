@@ -6,11 +6,16 @@ body,
   height: 100%;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   background: #f7f8fa;
   color: #191f28;
   font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  overflow-x: hidden;
 }
 
 /* 인트로 로고 애니메이션: 밑줄 그리기 → 바운스 → 위로 이동 → 로그인 노출 */
