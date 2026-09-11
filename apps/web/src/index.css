@@ -1,113 +1,143 @@
 @import "tailwindcss";
 
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
+html,
+body,
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
+  height: 100%;
 }
 
 body {
   margin: 0;
+  background: #f7f8fa;
+  color: #191f28;
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+/* 인트로 로고 애니메이션: 밑줄 그리기 → 바운스 → 위로 이동 → 로그인 노출 */
+@keyframes draw-underline {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
   }
 }
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+
+.favicon-piece {
+  animation: favicon-piece-draw 0.4s linear both;
+}
+
+.favicon-piece-top { animation-delay: 2s; }
+.favicon-piece-middle {
+  animation-name: favicon-middle-draw;
+  animation-delay: 2.4s;
+}
+.favicon-piece-bottom { animation-delay: 2.8s; }
+
+@keyframes favicon-piece-draw {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes favicon-middle-draw {
+  from { clip-path: inset(0 0 0 100%); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+.stock-hanzi-cloud {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  mask-image: linear-gradient(to bottom, #000 0%, #000 48%, transparent 78%);
+  transition: opacity .5s ease-out;
+}
+
+.stock-hanzi-cloud-pending {
+  opacity: 0;
+}
+
+.stock-hanzi-cloud-ready {
+  opacity: 1;
+}
+
+.stock-hanzi {
+  position: absolute;
+  color: #d1d6db;
+  font-family: inherit;
+  font-size: clamp(320px, 78vw, 900px);
+  font-weight: 700;
+  line-height: 1;
+  opacity: .12;
+}
+
+.stock-hanzi:nth-child(1) {
+  top: calc(50% - 140px - .95em);
+  left: -.35em;
+}
+
+.stock-hanzi:nth-child(2) {
+  top: calc(50% - 140px + .05em);
+  right: -.35em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .favicon-piece { animation: none; }
+  .stock-hanzi-cloud { transition: none; }
+}
+
+@keyframes logo-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  35% {
+    transform: translateY(-10px);
+  }
+  65% {
+    transform: translateY(2px);
   }
 }
-p {
-  margin: 0;
+
+@keyframes logo-rise {
+  from {
+    transform: translate(-50%, -50%);
+  }
+  to {
+    transform: translate(-50%, calc(-50% - 140px));
+  }
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+@keyframes login-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+.login-actions-pending {
+  pointer-events: none;
+  opacity: 0;
+}
+
+.login-actions-ready {
+  animation: login-fade-in .5s ease-out both;
+}
+
+.popular-stocks__extra {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows .3s ease, opacity .2s ease;
+}
+
+.popular-stocks__extra--open {
+  grid-template-rows: 1fr;
+  opacity: 1;
 }

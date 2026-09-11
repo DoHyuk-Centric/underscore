@@ -1,39 +1,37 @@
-import { useState } from 'react'
-import { TDSMobileAITProvider } from '@toss/tds-mobile-ait'
-import { StockSearchBar } from './features/stock-search/components/StockSearchBar'
-import { StockSearchResults } from './features/stock-search/components/StockSearchResults'
-import { useStockSearch } from './features/stock-search/hooks/useStockSearch'
-import './App.css'
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
+import { BottomNav } from './components/BottomNav'
+import { Header } from './components/Header'
+import AiPage from './pages/AiPage'
+import GuidePage from './pages/GuidePage'
+import HistoryPage from './pages/HistoryPage'
+import HomePage from './pages/HomePage'
+import LoginPage from './pages/LoginPage'
+
+function TabLayout() {
+  return (
+    <div className="grid grid-rows-[auto_1fr_auto] h-dvh">
+      <Header />
+      <div className="min-h-0 overflow-y-auto">
+        <Outlet />
+      </div>
+      <BottomNav />
+    </div>
+  )
+}
 
 function App() {
-  const [query, setQuery] = useState('')
-  const { stocks, isLoading, error } = useStockSearch(query)
-
   return (
-    <TDSMobileAITProvider>
-      <main className="stock-search">
-        <header className="stock-search__header">
-          <p className="stock-search__eyebrow">MARKET DATA</p>
-          <h1>종목 검색</h1>
-          <p>관심 있는 종목을 검색하고 기본 정보를 확인해보세요.</p>
-        </header>
-
-        <div className="stock-search__bar">
-          <StockSearchBar
-            aria-label="종목 검색"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-        </div>
-
-        <StockSearchResults
-          query={query}
-          stocks={stocks}
-          isLoading={isLoading}
-          error={error}
-        />
-      </main>
-    </TDSMobileAITProvider>
+    <Routes>
+      <Route path="/" element={<Navigate to="/home" replace />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/guide" element={<GuidePage />} />
+      <Route element={<TabLayout />}>
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/ai" element={<AiPage />} />
+        <Route path="/history" element={<HistoryPage />} />
+      </Route>
+      <Route path="*" element={<Navigate to="/login" replace />} />
+    </Routes>
   )
 }
 
