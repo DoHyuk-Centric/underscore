@@ -52,7 +52,15 @@ body {
   pointer-events: none;
   user-select: none;
   mask-image: linear-gradient(to bottom, #000 0%, #000 48%, transparent 78%);
-  animation: stock-background-reveal 4s ease-in-out 3.2s both;
+  transition: opacity .5s ease-out;
+}
+
+.stock-hanzi-cloud-pending {
+  opacity: 0;
+}
+
+.stock-hanzi-cloud-ready {
+  opacity: 1;
 }
 
 .stock-hanzi {
@@ -62,7 +70,7 @@ body {
   font-size: clamp(320px, 78vw, 900px);
   font-weight: 700;
   line-height: 1;
-  animation: stock-hanzi-crossfade 12s ease-in-out 3.2s infinite alternate both;
+  opacity: .12;
 }
 
 .stock-hanzi:nth-child(1) {
@@ -73,27 +81,11 @@ body {
 .stock-hanzi:nth-child(2) {
   top: calc(50% - 140px + .05em);
   right: -.35em;
-  animation-direction: alternate-reverse;
-}
-
-@keyframes stock-background-reveal {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* 12 seconds per transition; the second glyph uses the opposite opacity. */
-@keyframes stock-hanzi-crossfade {
-  from { opacity: .22; }
-  to { opacity: .02; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .favicon-piece { animation: none; }
-  .stock-hanzi-cloud { animation: none; }
-  .stock-hanzi {
-    animation: none;
-    opacity: .12;
-  }
+  .stock-hanzi-cloud { transition: none; }
 }
 
 @keyframes logo-bounce {
@@ -140,7 +132,7 @@ body {
 
 .home-screen {
   min-height: 100dvh;
-  padding: 24px 24px 40px;
+  padding: 12px 12px 40px;
   background: #f7f8fa;
 }
 
@@ -148,7 +140,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 38px;
+  padding-bottom: 12px;
 }
 
 .home-brand {
@@ -162,24 +154,63 @@ body {
 }
 
 .home-brand-mark {
-  width: 12px;
-  height: 12px;
-  border-radius: 4px;
-  background: #191f28;
-  transform: rotate(45deg) scale(.72);
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
 }
 
-.home-profile {
-  display: grid;
-  width: 36px;
-  height: 36px;
-  place-items: center;
-  border: 0;
-  border-radius: 50%;
-  background: #e5e8eb;
+.home-search {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 20px;
+}
+
+.stock-search__message {
+  margin: 12px 8px 0;
   color: #6b7684;
+  font-size: 14px;
+}
+
+.stock-search__message--error {
+  color: #f04452;
+}
+
+.stock-search__results {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stock-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.stock-card__name,
+.stock-card__code {
+  display: block;
+}
+
+.stock-card__name {
+  font-size: 15px;
+}
+
+.stock-card__code,
+.stock-card__meta {
+  color: #8b95a1;
   font-size: 12px;
-  font-weight: 700;
+}
+
+.stock-card__meta {
+  display: grid;
+  gap: 3px;
+  text-align: right;
 }
 
 .home-intro {

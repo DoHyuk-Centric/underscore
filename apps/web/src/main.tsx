@@ -1,25 +1,18 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { TDSMobileAITProvider } from '@toss/tds-mobile-ait'
+import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.tsx'
 
-function isAppsInTossRuntime() {
-  return (
-    typeof window !== 'undefined' &&
-    Object.prototype.hasOwnProperty.call(window, '__appsInTossConstants')
-  )
-}
-
-const app = <App />
-const content = isAppsInTossRuntime() ? (
-  <TDSMobileAITProvider>{app}</TDSMobileAITProvider>
-) : (
-  app
+const app = (
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
 )
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    {content}
+    <TDSMobileAITProvider>{app}</TDSMobileAITProvider>
   </StrictMode>,
 )
