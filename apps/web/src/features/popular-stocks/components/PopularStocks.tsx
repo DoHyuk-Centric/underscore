@@ -16,14 +16,14 @@ export function PopularStocks() {
   }
 
   return (
-    <section aria-labelledby="popular-list-title">
+    <section className="relative z-1 flex min-h-0 flex-col" aria-labelledby="popular-list-title">
       <SegmentedControl className="px-2" size="small" value={selectedTab} onChange={changeTab}>
         <SegmentedControl.Item value="stocks">인기 종목</SegmentedControl.Item>
         <SegmentedControl.Item value="sectors">인기 섹터</SegmentedControl.Item>
       </SegmentedControl>
 
       <ListHeader
-        title={<ListHeader.TitleParagraph id="popular-list-title">{isStockTab ? '오늘 거래대금이 많은 종목' : '오늘 많이 움직인 섹터'}</ListHeader.TitleParagraph>}
+        title={<ListHeader.TitleParagraph id="popular-list-title">{isStockTab ? '현재 거래대금이 많은 종목' : '현재 많이 상승한 섹터'}</ListHeader.TitleParagraph>}
         description={<ListHeader.DescriptionParagraph>{isStockTab ? '거래대금 기준' : '업종지수 등락률 기준'}</ListHeader.DescriptionParagraph>}
         descriptionPosition="bottom"
         size="medium"
@@ -31,9 +31,18 @@ export function PopularStocks() {
 
       {isStockTab ? <PopularStockList expanded={expanded} /> : <PopularSectorList expanded={expanded} />}
 
-      <ul className="m-0 p-0 list-none">
-        <ListFooter border="none" shadow={<></>} aria-expanded={expanded} onClick={() => setExpanded((current) => !current)}>
-          {expanded ? '접기' : '더보기'}
+      <ul className="m-0 list-none p-0">
+        <ListFooter
+          icon={expanded ? 'icon-arrow-up-mono' : 'icon-arrow-down-mono'}
+          iconColor="#6b7684"
+          textColor="#6b7684"
+          border="none"
+          shadow={<></>}
+          aria-expanded={expanded}
+          aria-label={expanded ? '인기 목록 접기' : '인기 목록 더 보기'}
+          onClick={() => setExpanded((current) => !current)}
+        >
+          {expanded ? '접기' : '더 보기'}
         </ListFooter>
       </ul>
     </section>
