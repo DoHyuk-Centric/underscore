@@ -23,6 +23,79 @@ body {
   }
 }
 
+.favicon-piece {
+  animation: favicon-piece-draw 0.4s linear both;
+}
+
+.favicon-piece-top { animation-delay: 2s; }
+.favicon-piece-middle {
+  animation-name: favicon-middle-draw;
+  animation-delay: 2.4s;
+}
+.favicon-piece-bottom { animation-delay: 2.8s; }
+
+@keyframes favicon-piece-draw {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes favicon-middle-draw {
+  from { clip-path: inset(0 0 0 100%); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+.stock-hanzi-cloud {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  mask-image: linear-gradient(to bottom, #000 0%, #000 48%, transparent 78%);
+  animation: stock-background-reveal 4s ease-in-out 3.2s both;
+}
+
+.stock-hanzi {
+  position: absolute;
+  color: #d1d6db;
+  font-family: inherit;
+  font-size: clamp(320px, 78vw, 900px);
+  font-weight: 700;
+  line-height: 1;
+  animation: stock-hanzi-crossfade 12s ease-in-out 3.2s infinite alternate both;
+}
+
+.stock-hanzi:nth-child(1) {
+  top: calc(50% - 140px - .95em);
+  left: -.35em;
+}
+
+.stock-hanzi:nth-child(2) {
+  top: calc(50% - 140px + .05em);
+  right: -.35em;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes stock-background-reveal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 12 seconds per transition; the second glyph uses the opposite opacity. */
+@keyframes stock-hanzi-crossfade {
+  from { opacity: .22; }
+  to { opacity: .02; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .favicon-piece { animation: none; }
+  .stock-hanzi-cloud { animation: none; }
+  .stock-hanzi {
+    animation: none;
+    opacity: .12;
+  }
+}
+
 @keyframes logo-bounce {
   0%,
   100% {
@@ -54,4 +127,158 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.login-actions-pending {
+  pointer-events: none;
+  opacity: 0;
+}
+
+.login-actions-ready {
+  animation: login-fade-in .5s ease-out both;
+}
+
+.home-screen {
+  min-height: 100dvh;
+  padding: 24px 24px 40px;
+  background: #f7f8fa;
+}
+
+.home-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 38px;
+}
+
+.home-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #191f28;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+}
+
+.home-brand-mark {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  background: #191f28;
+  transform: rotate(45deg) scale(.72);
+}
+
+.home-profile {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #e5e8eb;
+  color: #6b7684;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.home-intro {
+  padding: 8px 0 28px;
+}
+
+.home-eyebrow {
+  margin: 0 0 12px;
+  color: #8b95a1;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+.home-intro h1 {
+  margin: 0;
+  color: #191f28;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -.06em;
+  line-height: 1.35;
+}
+
+.home-intro > p:last-child {
+  margin: 14px 0 0;
+  color: #6b7684;
+  font-size: 14px;
+}
+
+.home-primary-action {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  border-radius: 18px;
+  padding: 20px;
+  background: #191f28;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.home-primary-action span {
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.home-replays {
+  padding-top: 42px;
+}
+
+.home-section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.home-section-heading h2 {
+  margin: 0;
+  color: #191f28;
+  font-size: 18px;
+  letter-spacing: -.04em;
+}
+
+.home-section-heading span {
+  color: #8b95a1;
+  font-size: 12px;
+}
+
+.home-empty-state {
+  margin-top: 16px;
+  padding: 28px 20px;
+  border-radius: 18px;
+  background: #fff;
+  text-align: center;
+}
+
+.home-empty-icon {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 14px;
+  place-items: center;
+  border-radius: 14px;
+  background: #f0f2f4;
+  color: #b0b8c1;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.home-empty-state strong {
+  color: #4e5968;
+  font-size: 14px;
+}
+
+.home-empty-state p {
+  margin: 8px 0 0;
+  color: #8b95a1;
+  font-size: 12px;
+  line-height: 1.6;
 }
