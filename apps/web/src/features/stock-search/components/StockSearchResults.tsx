@@ -40,7 +40,9 @@ export function StockSearchResults({
 
     if (isLoading) {
       return showSkeleton ? (
-        <Skeleton pattern="subtitleList" repeatLastItemCount={3} className="mt-2.5" />
+        <div className="mt-2.5 w-full min-w-0 overflow-hidden">
+          <Skeleton pattern="subtitleList" repeatLastItemCount={3} style={{ width: '100%' }} />
+        </div>
       ) : null
     }
 
