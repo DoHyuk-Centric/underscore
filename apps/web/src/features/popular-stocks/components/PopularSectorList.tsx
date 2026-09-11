@@ -1,0 +1,22 @@
+import { ListRow } from '@toss/tds-mobile'
+
+const popularSectors = [
+  { rank: 1, name: '2차전지', detail: '거래대금 1.8조원', value: '-4.28%', change: '하락' },
+  { rank: 2, name: '반도체', detail: '거래대금 4.2조원', value: '+3.42%', change: '상승' },
+  { rank: 3, name: '게임', detail: '거래대금 6,420억원', value: '-3.12%', change: '하락' },
+  { rank: 4, name: '자동차', detail: '거래대금 1.8조원', value: '+2.18%', change: '상승' },
+  { rank: 5, name: '바이오', detail: '거래대금 9,430억원', value: '+1.67%', change: '상승' },
+  { rank: 6, name: '증권', detail: '거래대금 7,850억원', value: '+1.42%', change: '상승' },
+  { rank: 7, name: '화학', detail: '거래대금 8,120억원', value: '-1.31%', change: '하락' },
+  { rank: 8, name: '조선', detail: '거래대금 1.1조원', value: '+1.18%', change: '상승' },
+  { rank: 9, name: '인터넷', detail: '거래대금 5,970억원', value: '-1.04%', change: '하락' },
+  { rank: 10, name: '금융', detail: '거래대금 8,760억원', value: '+0.92%', change: '상승' },
+]
+
+const INITIAL_ITEM_COUNT = 5
+type Props = { expanded: boolean }
+
+export function PopularSectorList({ expanded }: Props) {
+  const renderList = (items: typeof popularSectors, connectsToNext = false) => <ol className="m-0 p-0 list-none">{items.map((item, index) => { const color = item.value.startsWith('+') ? 'text-[#f04452]' : 'text-[#3182f6]'; return <ListRow key={item.name} left={<span className="inline-block w-5 text-[#6b7684] text-[15px] font-bold text-center">{item.rank}</span>} contents={<span className="grid gap-1"><strong className="text-[#191f28] text-[15px]">{item.name}</strong><small className="text-[#8b95a1] text-xs">{item.detail}</small></span>} right={<span className="grid gap-1 text-right"><strong className={`text-[15px] ${color}`}>{item.value}</strong><small className={`text-xs ${color}`}>{item.change}</small></span>} border={index === items.length - 1 && !connectsToNext ? 'none' : 'indented'} horizontalPadding="small" verticalPadding="medium" withTouchEffect /> })}</ol>
+  return <><>{renderList(popularSectors.slice(0, INITIAL_ITEM_COUNT), expanded)}</><div className={`popular-stocks__extra ${expanded ? 'popular-stocks__extra--open' : ''}`} aria-hidden={!expanded}>{renderList(popularSectors.slice(INITIAL_ITEM_COUNT))}</div></>
+}
