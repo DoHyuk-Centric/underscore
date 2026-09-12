@@ -11,7 +11,7 @@ function TabLayout() {
   return (
     <div className="grid grid-rows-[auto_1fr_auto] h-dvh">
       <Header />
-      <div className="min-h-0 overflow-y-auto overflow-x-hidden">
+      <div className="h-full min-h-0 overflow-y-auto overflow-x-hidden">
         <Outlet />
       </div>
       <BottomNav />

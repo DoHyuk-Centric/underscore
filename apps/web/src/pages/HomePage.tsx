@@ -1,30 +1,36 @@
-import { useState } from "react";
-import { StockSearchBar } from "../features/stock-search/components/StockSearchBar";
-import { StockSearchResults } from "../features/stock-search/components/StockSearchResults";
-import { useStockSearch } from "../features/stock-search/hooks/useStockSearch";
-import { PopularStocks } from "../features/popular-stocks/components/PopularStocks";
+import { useState } from 'react'
+import { StockSearchBar } from '../features/stock-search/components/StockSearchBar'
+import { StockSearchResults } from '../features/stock-search/components/StockSearchResults'
+import { useStockSearch } from '../features/stock-search/hooks/useStockSearch'
+import { PopularStocks } from '../features/popular-stocks/components/PopularStocks'
+import { KakaoContact } from '../features/contact/components/KakaoContact'
 
 function HomePage() {
-  const [query, setQuery] = useState("");
-  const searchState = useStockSearch(query);
-
-  const isSearching = Boolean(query.trim());
+  const [query, setQuery] = useState('')
+  const searchState = useStockSearch(query)
+  const isSearching = Boolean(query.trim())
 
   return (
-    <main className="flex flex-col min-h-full px-2 pb-6 bg-[#f7f8fa]">
-      <section
-        className="relative z-1 flex flex-col flex-1 min-h-0 bg-white rounded-[20px] mt-4 py-1"
-        aria-label="종목 검색"
-      >
+    <main className="flex min-h-full flex-col px-2 pb-6 bg-[#f7f8fa]">
+      <section className="mt-3 flex flex-1 shrink-0 flex-col rounded-[20px] bg-white px-3 py-1">
         <StockSearchBar
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          onDeleteClick={() => setQuery("")}
+          onDeleteClick={() => setQuery('')}
         />
-        {isSearching ? <StockSearchResults query={query} {...searchState} /> : <PopularStocks />}
+        {isSearching ? (
+          <StockSearchResults query={query} {...searchState} />
+        ) : (
+          <PopularStocks />
+        )}
       </section>
+      {!isSearching && (
+        <div className="flex w-full shrink-0 justify-end">
+          <KakaoContact />
+        </div>
+      )}
     </main>
-  );
+  )
 }
 
-export default HomePage;
+export default HomePage
