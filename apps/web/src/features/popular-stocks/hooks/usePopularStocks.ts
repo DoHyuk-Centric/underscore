@@ -1,33 +1,7 @@
-import { useCallback, useEffect, useState } from 'react'
-import { getPopularStocks } from '../api/popular-api'
-import type { PopularStock } from '@underscore/shared'
+import { getPopularStocks } from '../api/popular-stock-api'
+import { useAsyncList } from '../../../hooks/useAsyncList'
 
 export function usePopularStocks() {
-  const [stocks, setStocks] = useState<PopularStock[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<unknown>(null)
-  const [retryCount, setRetryCount] = useState(0)
-
-  const retry = useCallback(() => {
-    setError(null)
-    setIsLoading(true)
-    setRetryCount((count) => count + 1)
-  }, [])
-
-  useEffect(() => {
-    const controller = new AbortController()
-
-    getPopularStocks(controller.signal)
-      .then(setStocks)
-      .catch((requestError) => {
-        if (!controller.signal.aborted) setError(requestError)
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setIsLoading(false)
-      })
-
-    return () => controller.abort()
-  }, [retryCount])
-
+  const { data: stocks, isLoading, error, retry } = useAsyncList(getPopularStocks)
   return { stocks, isLoading, error, retry }
 }
