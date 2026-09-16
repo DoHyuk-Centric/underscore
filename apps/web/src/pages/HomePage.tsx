@@ -9,9 +9,13 @@ function HomePage() {
   const [query, setQuery] = useState('')
   const searchState = useStockSearch(query)
   const isSearching = Boolean(query.trim())
+  let mainClassName = 'flex min-h-full flex-col bg-[#f7f8fa] px-2 pb-6'
+  if (isSearching) {
+    mainClassName = 'flex h-full min-h-0 flex-col bg-[#f7f8fa] px-2 pb-6'
+  }
 
   return (
-    <main className="flex h-full min-h-0 flex-col bg-[#f7f8fa] px-2 pb-6">
+    <main className={mainClassName}>
       <section
         className={`mt-3 rounded-[20px] bg-white px-3 py-1 ${
           isSearching ? 'flex min-h-0 flex-1 flex-col' : ''

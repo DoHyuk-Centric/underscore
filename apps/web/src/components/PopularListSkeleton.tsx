@@ -22,6 +22,7 @@ export function PopularListSkeleton() {
               className={index > 0 ? "border-t border-[#f0f1f3]" : undefined}
             >
               <ListRow
+                style={{ minHeight: "var(--popular-list-row-height, 80px)" }}
                 left={<Bar width={20} />}
                 contents={
                   <span className="grid gap-1">

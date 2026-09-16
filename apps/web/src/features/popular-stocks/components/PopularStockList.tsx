@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import type { PopularStock } from "@underscore/shared";
-import { ListError } from "../../../components/ListError";
 import { PopularList } from "../../../components/PopularList";
+import { PopularListError } from "../../../components/PopularListError";
 import { PopularListSkeleton } from "../../../components/PopularListSkeleton";
 import { getChangeRatePresentation } from "../../../lib/change-rate-presentation";
 
@@ -22,13 +22,18 @@ export function PopularStockList({
 }: Props) {
   const navigate = useNavigate();
 
-  if (error) {
+  const hasStocks = stocks.length > 0;
+
+  if (error && !hasStocks) {
     return (
-      <ListError message={"인기 종목을 불러오지 못했어요."} onRetry={refetch} />
+      <PopularListError
+        message="인기 종목을 불러오지 못했어요."
+        onRetry={refetch}
+      />
     );
   }
 
-  if (isLoading) {
+  if (isLoading && !hasStocks) {
     return <PopularListSkeleton />;
   }
 

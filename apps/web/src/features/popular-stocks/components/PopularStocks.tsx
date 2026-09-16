@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { ListFooter, ListHeader, SegmentedControl } from "@toss/tds-mobile";
+import { ListHeader, SegmentedControl } from "@toss/tds-mobile";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { PopularSectorList } from "./PopularSectorList";
 import { PopularStockList } from "./PopularStockList";
 import { usePopularStocks } from "../hooks/usePopularStocks";
 import { usePopularSectors } from "../../popular-sector/hooks/usePopularSectors";
+import "../../../components/PopularList.css";
 
 type PopularTab = "stocks" | "sectors";
 
@@ -14,8 +16,17 @@ export function PopularStocks() {
 
   const stockState = usePopularStocks();
   const sectorState = usePopularSectors();
+  const activeItemCount = isStockTab
+    ? stockState.stocks.length
+    : sectorState.sectors.length;
   const activeState = isStockTab ? stockState : sectorState;
-  const canExpand = !activeState.error && !activeState.isLoading;
+  const canExpand = !activeState.isLoading && activeItemCount > 5;
+  const hideFooter = Boolean(activeState.error) && activeItemCount === 0;
+
+  const toggleExpanded = () => {
+    if (!canExpand) return;
+    setExpanded((current) => !current);
+  };
 
   const changeTab = (value: string) => {
     setSelectedTab(value as PopularTab);
@@ -24,7 +35,7 @@ export function PopularStocks() {
 
   return (
     <section
-      className="relative z-1 flex flex-col"
+      className="popular-list relative z-1 flex flex-col"
       aria-labelledby="popular-list-title"
     >
       <SegmentedControl
@@ -52,35 +63,30 @@ export function PopularStocks() {
         size="medium"
       />
 
-      {isStockTab ? (
-        <PopularStockList expanded={expanded} {...stockState} />
-      ) : (
-        <PopularSectorList expanded={expanded} {...sectorState} />
-      )}
+      <div className="popular-list__slot" data-expanded={expanded} aria-busy={activeState.isLoading}>
+        {isStockTab ? (
+          <PopularStockList expanded={expanded} {...stockState} />
+        ) : (
+          <PopularSectorList expanded={expanded} {...sectorState} />
+        )}
+      </div>
 
-      {canExpand ? (
-        <ul className="m-0 list-none p-0">
-          <ListFooter
-            icon={expanded ? "icon-arrow-up-mono" : "icon-arrow-down-mono"}
-            iconColor="#6b7684"
-            textColor="#6b7684"
-            border="none"
-            shadow={
-              <ListFooter.Shadow
-                style={{
-                  background:
-                    "radial-gradient(closest-side, #e8f3ff 0%, transparent 100%)",
-                }}
-              />
-            }
-            aria-expanded={expanded}
-            aria-label={expanded ? "인기 목록 접기" : "인기 목록 더 보기"}
-            onClick={() => setExpanded((current) => !current)}
-          >
-            {expanded ? "접기" : "더 보기"}
-          </ListFooter>
-        </ul>
-      ) : null}
+      <button
+        type="button"
+        className="popular-list__footer"
+        aria-hidden={hideFooter}
+        disabled={!canExpand}
+        aria-expanded={expanded}
+        aria-label={expanded ? "인기 목록 접기" : "인기 목록 더 보기"}
+        onClick={toggleExpanded}
+      >
+        {expanded ? "접기" : "더 보기"}
+        {expanded ? (
+          <ChevronUp size={18} aria-hidden="true" />
+        ) : (
+          <ChevronDown size={18} aria-hidden="true" />
+        )}
+      </button>
     </section>
   );
 }

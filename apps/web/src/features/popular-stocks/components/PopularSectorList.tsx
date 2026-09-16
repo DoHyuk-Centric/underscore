@@ -1,6 +1,6 @@
 import type { PopularSector } from "@underscore/shared";
-import { ListError } from "../../../components/ListError";
 import { PopularList } from "../../../components/PopularList";
+import { PopularListError } from "../../../components/PopularListError";
 import { PopularListSkeleton } from "../../../components/PopularListSkeleton";
 import { getChangeRatePresentation } from "../../../lib/change-rate-presentation";
 
@@ -29,13 +29,18 @@ export function PopularSectorList({
   error,
   refetch,
 }: Props) {
-  if (error) {
+  const hasSectors = sectors.length > 0;
+
+  if (error && !hasSectors) {
     return (
-      <ListError message="인기 섹터를 불러오지 못했어요." onRetry={refetch} />
+      <PopularListError
+        message="인기 섹터를 불러오지 못했어요."
+        onRetry={refetch}
+      />
     );
   }
 
-  if (isLoading) {
+  if (isLoading && !hasSectors) {
     return <PopularListSkeleton />;
   }
 

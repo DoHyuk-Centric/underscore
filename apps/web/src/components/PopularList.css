@@ -1,3 +1,47 @@
+.popular-list {
+  --popular-list-row-height: 80px;
+  --popular-list-preview-count: 5;
+}
+
+.popular-list__slot {
+  display: grid;
+  /* Five rows and the four separators between them. */
+  min-height: calc(var(--popular-list-row-height) * var(--popular-list-preview-count) + 4px);
+}
+
+.popular-list__slot[data-expanded='true'] {
+  min-height: 0;
+}
+
+.popular-list__slot > ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.popular-list__footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 48px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #6b7684;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.popular-list__footer:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.popular-list__footer[aria-hidden='true'] {
+  visibility: hidden;
+}
+
 .popular-list__row {
   display: grid;
   grid-template-rows: 1fr;

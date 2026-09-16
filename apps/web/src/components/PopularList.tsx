@@ -36,6 +36,7 @@ export function PopularList({ items, expanded, onSelect }: Props) {
                 className={index > 0 ? "border-t border-[#f0f1f3]" : undefined}
               >
                 <ListRow
+                  style={{ minHeight: "var(--popular-list-row-height, 80px)" }}
                   left={
                     <span className="inline-block w-5 text-center text-[15px] font-bold text-[#6b7684]">
                       {item.rank}
