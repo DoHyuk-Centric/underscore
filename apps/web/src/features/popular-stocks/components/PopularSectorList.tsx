@@ -2,6 +2,7 @@ import type { PopularSector } from "@underscore/shared";
 import { ListError } from "../../../components/ListError";
 import { PopularList } from "../../../components/PopularList";
 import { PopularListSkeleton } from "../../../components/PopularListSkeleton";
+import { getChangeRatePresentation } from "../../../lib/change-rate-presentation";
 
 type Props = {
   expanded: boolean;
@@ -39,15 +40,14 @@ export function PopularSectorList({
   }
 
   const items = sectors.map((sector) => {
-    const color = sector.changeRate >= 0 ? "text-[#f04452]" : "text-[#3182f6]";
-    const changeText = `${sector.changeRate >= 0 ? "+" : ""}${sector.changeRate.toFixed(2)}%`;
+    const change = getChangeRatePresentation(sector.changeRate);
 
     return {
       key: sector.name,
       rank: sector.rank,
       name: sector.name,
       detail: formatTradingValue(sector.tradingValue),
-      right: <strong className={`text-[15px] ${color}`}>{changeText}</strong>,
+      right: <strong className={`text-[15px] ${change.className}`}>{change.text}</strong>,
     };
   });
 

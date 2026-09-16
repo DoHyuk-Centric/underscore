@@ -2,6 +2,7 @@ import type { PopularStock } from "@underscore/shared";
 import { ListError } from "../../../components/ListError";
 import { PopularList } from "../../../components/PopularList";
 import { PopularListSkeleton } from "../../../components/PopularListSkeleton";
+import { getChangeRatePresentation } from "../../../lib/change-rate-presentation";
 
 type Props = {
   expanded: boolean;
@@ -29,8 +30,7 @@ export function PopularStockList({
   }
 
   const items = stocks.map((stock) => {
-    const color = stock.changeRate >= 0 ? "text-[#f04452]" : "text-[#3182f6]";
-    const changeText = `${stock.changeRate >= 0 ? "+" : ""}${stock.changeRate.toFixed(2)}%`;
+    const change = getChangeRatePresentation(stock.changeRate);
 
     return {
       key: stock.stockCode,
@@ -42,7 +42,7 @@ export function PopularStockList({
           <strong className="text-[15px] text-[#191f28]">
             {stock.price.toLocaleString()}원
           </strong>
-          <small className={`text-xs ${color}`}>{changeText}</small>
+          <small className={`text-xs ${change.className}`}>{change.text}</small>
         </span>
       ),
     };
