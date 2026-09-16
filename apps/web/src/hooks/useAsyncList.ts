@@ -6,7 +6,7 @@ export function useAsyncList<T>(fetcher: (signal: AbortSignal) => Promise<T[]>) 
   const [error, setError] = useState<unknown>(null)
   const [retryCount, setRetryCount] = useState(0)
 
-  const retry = useCallback(() => {
+  const refetch = useCallback(() => {
     setError(null)
     setIsLoading(true)
     setRetryCount((count) => count + 1)
@@ -27,5 +27,5 @@ export function useAsyncList<T>(fetcher: (signal: AbortSignal) => Promise<T[]>) 
     return () => controller.abort()
   }, [retryCount, fetcher])
 
-  return { data, isLoading, error, retry }
+  return { data, isLoading, error, refetch }
 }

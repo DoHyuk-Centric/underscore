@@ -8,7 +8,7 @@ type Props = {
   stocks: PopularStock[];
   isLoading: boolean;
   error: unknown;
-  retry: () => void;
+  refetch: () => void;
 };
 
 export function PopularStockList({
@@ -16,11 +16,11 @@ export function PopularStockList({
   stocks,
   isLoading,
   error,
-  retry,
+  refetch,
 }: Props) {
   if (error) {
     return (
-      <ListError message={"인기 종목을 불러오지 못했어요."} onRetry={retry} />
+      <ListError message={"인기 종목을 불러오지 못했어요."} onRetry={refetch} />
     );
   }
 

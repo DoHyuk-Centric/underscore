@@ -8,7 +8,7 @@ type Props = {
   sectors: PopularSector[];
   isLoading: boolean;
   error: unknown;
-  retry: () => void;
+  refetch: () => void;
 };
 
 function formatTradingValue(value: number): string {
@@ -26,11 +26,11 @@ export function PopularSectorList({
   sectors,
   isLoading,
   error,
-  retry,
+  refetch,
 }: Props) {
   if (error) {
     return (
-      <ListError message="인기 섹터를 불러오지 못했어요." onRetry={retry} />
+      <ListError message="인기 섹터를 불러오지 못했어요." onRetry={refetch} />
     );
   }
 
