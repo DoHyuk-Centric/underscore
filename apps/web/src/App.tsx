@@ -6,6 +6,7 @@ import GuidePage from './pages/GuidePage'
 import HistoryPage from './pages/HistoryPage'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
+import StockDetailPage from './pages/StockDetailPage'
 import { useDailyPopularDataSync } from './hooks/useDailyPopularDataSync'
 
 function TabLayout() {
@@ -28,6 +29,7 @@ function App() {
       <Route path="/" element={<Navigate to="/home" replace />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/guide" element={<GuidePage />} />
+      <Route path="/stocks/:stockCode" element={<StockDetailPage />} />
       <Route element={<TabLayout />}>
         <Route path="/home" element={<HomePage />} />
         <Route path="/ai" element={<AiPage />} />

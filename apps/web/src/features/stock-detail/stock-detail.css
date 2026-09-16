@@ -1,0 +1,105 @@
+.stock-detail {
+  min-height: 100dvh;
+  padding-bottom: max(28px, env(safe-area-inset-bottom));
+  background: #f7f8fa;
+  color: #191f28;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+.stock-detail h1, .stock-detail h2, .stock-detail h3,
+.stock-detail p, .stock-detail dl, .stock-detail dd { margin: 0; }
+.stock-detail button { font: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.stock-detail button:focus-visible { outline: 3px solid #3182f6; outline-offset: 3px; }
+.stock-detail__header { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid #eef0f3; background: #fff; padding-top: env(safe-area-inset-top); }
+.stock-detail__header-inner { display: flex; align-items: center; gap: 8px; max-width: 1120px; min-height: 64px; margin: auto; padding: 0 24px; }
+.stock-detail__back { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; margin-left: -10px; border: 0; border-radius: 50%; background: transparent; color: #333d4b; }
+.stock-detail__back:hover { background: #f2f4f6; }
+.stock-detail__header-title { font-size: 16px; font-weight: 650; }
+.stock-detail__header-code { display: flex; align-items: center; gap: 10px; margin-left: auto; color: #6b7684; font-size: 12px; }
+.stock-detail__header-code > span { padding: 4px 7px; border-radius: 5px; background: #f2f4f6; font-size: 10px; font-weight: 700; letter-spacing: .3px; }
+.stock-detail__content { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(320px, 1fr); align-items: start; gap: 24px; max-width: 1120px; margin: auto; padding: 32px 24px 0; }
+.stock-detail__overview, .stock-info { min-width: 0; border: 1px solid #eceff2; border-radius: 24px; background: #fff; }
+.stock-quote { padding: 30px 30px 0; }
+.stock-quote__identity { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.stock-quote__identity > div { min-width: 0; }
+.stock-quote h1 { font-size: 24px; font-weight: 700; letter-spacing: -.7px; line-height: 1.4; overflow-wrap: anywhere; }
+.stock-quote__sector { flex-shrink: 0; margin-top: 5px; border-radius: 6px; background: #eaf2fe; padding: 5px 8px; color: #3182f6; font-size: 11px; font-weight: 600; }
+.stock-quote .stock-quote__price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px; margin-top: 10px; }
+.stock-quote__price strong { font-size: clamp(34px, 4vw, 44px); font-weight: 750; line-height: 1.2; letter-spacing: -1.6px; overflow-wrap: anywhere; }
+.stock-quote__price > span { color: #333d4b; font-size: 24px; font-weight: 500; }
+.stock-quote__change { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-top: 12px; font-size: 14px; }
+.stock-quote__comparison { color: #6b7684; font-size: 13px; }
+.stock-quote__difference { font-weight: 600; }
+.stock-detail [data-sign="plus"] { color: #f04452; }
+.stock-detail [data-sign="minus"] { color: #3182f6; }
+.stock-detail [data-sign="zero"] { color: #6b7684; }
+.stock-quote__badge { display: inline-flex; align-items: center; gap: 3px; padding: 4px 9px; border-radius: 999px; background: #f2f4f6; font-size: 12px; font-weight: 700; }
+[data-sign="plus"] .stock-quote__badge { background: #fff0f1; }
+[data-sign="minus"] .stock-quote__badge { background: #edf4ff; }
+.stock-chart { padding: 30px; }
+.stock-chart__heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid #f2f4f6; padding-top: 22px; }
+.stock-chart__heading h2 { font-size: 15px; font-weight: 650; }
+.stock-chart__heading > span { color: #8b95a1; font-size: 12px; }
+.stock-chart__extremes { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 14px 0 22px; color: #8b95a1; font-size: 12px; }
+.stock-chart__extremes strong { margin-left: 4px; color: #4e5968; font-weight: 500; }
+.stock-chart__plot { display: block; width: 100%; height: 250px; overflow: visible; }
+.stock-chart__axis { display: flex; justify-content: space-between; margin: 10px 0 24px; padding: 0 4px; color: #8b95a1; font-size: 11px; }
+.stock-chart__periods { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 12px; background: #f5f6f8; }
+.stock-chart__periods button { min-height: 44px; border: 0; border-radius: 9px; background: transparent; color: #6b7684; font-size: 13px; font-weight: 500; transition: background .15s, color .15s; }
+.stock-chart__periods button:hover { background: #e9edf2; }
+.stock-chart__periods button[aria-pressed="true"] { background: #fff; color: #191f28; font-weight: 700; box-shadow: 0 1px 5px #191f2810; }
+.stock-chart__empty { display: grid; place-items: center; height: 297px; color: #8b95a1; font-size: 14px; }
+.stock-info { padding: 26px; }
+.stock-info > h2 { margin-bottom: 24px; font-size: 19px; font-weight: 700; letter-spacing: -.5px; }
+.stock-info__section + .stock-info__section { margin-top: 24px; padding-top: 22px; border-top: 1px solid #f0f2f4; }
+.stock-info h3 { color: #4e5968; font-size: 13px; font-weight: 600; }
+.stock-info dt { color: #8b95a1; font-size: 12px; }
+.stock-info dd { color: #333d4b; font-size: 14px; font-weight: 600; overflow-wrap: anywhere; }
+.stock-info .stock-info__prices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 16px; margin-top: 18px; }
+.stock-info__prices dd { margin-top: 6px; font-size: 16px; }
+.stock-info__prices dd > span { margin-left: 2px; font-size: 12px; font-weight: 400; }
+.stock-info__range-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; }
+.stock-info__range-heading > span { color: #8b95a1; font-size: 11px; }
+.stock-info__range { position: relative; height: 6px; margin: 22px 6px 14px; border-radius: 6px; background: linear-gradient(90deg, #d9e8ff, #a8c8ff); }
+.stock-info__range > span { position: absolute; top: 50%; left: var(--price-position); width: 12px; height: 12px; border: 3px solid #fff; border-radius: 50%; background: #3182f6; box-shadow: 0 0 0 1px #3182f6; transform: translate(-50%, -50%); }
+.stock-info__range-values { display: flex; justify-content: space-between; gap: 16px; }
+.stock-info__range-values > div:last-child { text-align: right; }
+.stock-info__range-values dt { font-size: 11px; }
+.stock-info__range-values dd { margin-top: 4px; font-size: 13px; }
+.stock-info .stock-info__rows { display: grid; gap: 16px; margin-top: 18px; }
+.stock-info__rows > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.stock-info__rows dt { flex-shrink: 0; }
+.stock-info__rows dd { text-align: right; }
+.stock-detail .stock-detail__notice { grid-column: 1 / -1; color: #8b95a1; text-align: center; font-size: 12px; line-height: 1.7; }
+.stock-detail__skeleton { display: grid; gap: 20px; padding: 30px; }
+.stock-detail__skeleton-bar { display: block; max-width: 100%; border-radius: 8px; background: #f2f4f6; animation: stock-detail-pulse 1.6s ease-in-out infinite; }
+@keyframes stock-detail-pulse { 50% { opacity: .45; } }
+
+@media (max-width: 799px) {
+  .stock-detail__header-inner { min-height: 56px; padding: 0 20px; }
+  .stock-detail__content { grid-template-columns: minmax(0, 1fr); max-width: 600px; gap: 16px; padding: 20px 16px 0; }
+  .stock-quote { padding: 26px 24px 0; }
+  .stock-chart { padding: 26px 24px 24px; }
+  .stock-chart__plot { height: 220px; }
+  .stock-info { padding: 24px; }
+}
+
+@media (max-width: 479px) {
+  .stock-detail__content { padding: 0; gap: 12px; }
+  .stock-detail__overview { border: 0; border-radius: 0; }
+  .stock-quote { padding: 24px 22px 0; }
+  .stock-quote h1 { font-size: 22px; }
+  .stock-quote__price strong { font-size: 38px; }
+  .stock-quote__price > span { font-size: 22px; }
+  .stock-chart { padding: 26px 22px 24px; }
+  .stock-chart__plot { height: 200px; }
+  .stock-info { margin: 0 12px; padding: 24px 22px; border: 0; border-radius: 20px; }
+  .stock-detail .stock-detail__notice { padding: 8px 24px; }
+  .stock-detail__skeleton { padding: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stock-chart__periods button { transition: none; }
+  .stock-detail__skeleton-bar { animation: none; }
+}

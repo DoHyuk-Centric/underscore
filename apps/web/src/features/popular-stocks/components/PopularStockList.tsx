@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import type { PopularStock } from "@underscore/shared";
 import { ListError } from "../../../components/ListError";
 import { PopularList } from "../../../components/PopularList";
@@ -19,6 +20,8 @@ export function PopularStockList({
   error,
   refetch,
 }: Props) {
+  const navigate = useNavigate();
+
   if (error) {
     return (
       <ListError message={"인기 종목을 불러오지 못했어요."} onRetry={refetch} />
@@ -48,5 +51,22 @@ export function PopularStockList({
     };
   });
 
-  return <PopularList items={items} expanded={expanded} />;
+  const goToDetail = (stockCode: string) => {
+    const stock = stocks.find((item) => item.stockCode === stockCode);
+    if (!stock) return;
+
+    navigate(`/stocks/${stock.stockCode}`, {
+      state: {
+        name: stock.name,
+        market: stock.market,
+        price: stock.price,
+        change: stock.change,
+        changeRate: stock.changeRate,
+        volume: stock.volume,
+        tradingValue: stock.tradingValue,
+      },
+    });
+  };
+
+  return <PopularList items={items} expanded={expanded} onSelect={goToDetail} />;
 }

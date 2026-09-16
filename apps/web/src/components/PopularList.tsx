@@ -15,9 +15,10 @@ export type PopularListItem = {
 type Props = {
   items: PopularListItem[];
   expanded: boolean;
+  onSelect?: (key: string) => void;
 };
 
-export function PopularList({ items, expanded }: Props) {
+export function PopularList({ items, expanded, onSelect }: Props) {
   return (
     <ol className="m-0 list-none p-0">
       {items.map((item, index) => {
@@ -55,6 +56,7 @@ export function PopularList({ items, expanded }: Props) {
                   horizontalPadding="small"
                   verticalPadding="medium"
                   withTouchEffect
+                  onClick={onSelect ? () => onSelect(item.key) : undefined}
                 />
               </div>
             </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Skeleton } from '@toss/tds-mobile'
+import { useNavigate } from 'react-router-dom'
 import type { KRXStock } from '@underscore/shared'
 import { NoSearchResults } from './NoSearchResults'
 import { SearchErrorState } from './SearchErrorState'
@@ -21,6 +22,7 @@ export function StockSearchResults({
   isLoading,
   error,
 }: StockSearchResultsProps) {
+  const navigate = useNavigate()
   const [showSkeleton, setShowSkeleton] = useState(false)
 
   useEffect(() => {
@@ -58,8 +60,22 @@ export function StockSearchResults({
       <ul className="grid min-h-0 flex-1 gap-2 mt-2.5 overflow-y-auto p-0 list-none">
         {stocks.map((stock) => (
           <li
-            className="flex items-center justify-between py-3.5 px-4 rounded-[14px] bg-white"
+            className="flex items-center justify-between py-3.5 px-4 rounded-[14px] bg-white active:bg-[#f2f4f6] cursor-pointer"
             key={stock.isinCode}
+            role="button"
+            tabIndex={0}
+            onClick={() =>
+              navigate(`/stocks/${stock.stockCode}`, {
+                state: { name: stock.name, market: stock.market },
+              })
+            }
+            onKeyDown={(event) => {
+              if (event.key !== 'Enter' && event.key !== ' ') return
+              event.preventDefault()
+              navigate(`/stocks/${stock.stockCode}`, {
+                state: { name: stock.name, market: stock.market },
+              })
+            }}
           >
             <div>
               <strong className="block text-[15px]">{stock.name}</strong>
