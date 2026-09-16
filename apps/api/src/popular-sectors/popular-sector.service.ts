@@ -6,6 +6,7 @@ import {
 import { Cron, CronExpression } from '@nestjs/schedule';
 import type { PopularSector } from '@underscore/shared';
 import { getYesterdayKstBasDt } from '../common/utils/kst-date.util.js';
+import { MarketDataEventsService } from '../market-data-events/market-data-events.service.js';
 import { KrxIndexClient } from './clients/krx-index.client.js';
 import { PopularSectorCache } from './popular-sector.cache.js';
 import { rankPopularSectors } from './popular-sector.ranker.js';
@@ -20,6 +21,7 @@ export class PopularSectorService {
   constructor(
     private readonly krxIndexClient: KrxIndexClient,
     private readonly popularSectorCache: PopularSectorCache,
+    private readonly marketDataEvents: MarketDataEventsService,
   ) {}
 
   async getPopularSectors(): Promise<PopularSector[]> {
@@ -91,6 +93,7 @@ export class PopularSectorService {
         }
 
         this.popularSectorCache.set({ checkedDate, baseDate, sectors });
+        this.marketDataEvents.emit('sectors');
 
         this.logger.log(`인기 섹터 ${sectors.length}건 캐싱 완료 (${baseDate})`);
 

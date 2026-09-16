@@ -6,6 +6,7 @@ import {
 import { Cron, CronExpression } from '@nestjs/schedule';
 import type { PopularStock } from '@underscore/shared';
 import { getYesterdayKstBasDt } from '../common/utils/kst-date.util.js';
+import { MarketDataEventsService } from '../market-data-events/market-data-events.service.js';
 import { KrxTradingClient } from './clients/krx-trading.client.js';
 import { PopularStockCache } from './popular-stock.cache.js';
 import { rankPopularStocks } from './popular-stock.ranker.js';
@@ -20,6 +21,7 @@ export class PopularStockService {
   constructor(
     private readonly krxTradingClient: KrxTradingClient,
     private readonly popularStockCache: PopularStockCache,
+    private readonly marketDataEvents: MarketDataEventsService,
   ) {}
 
   async getPopularStocks(): Promise<PopularStock[]> {
@@ -96,6 +98,7 @@ export class PopularStockService {
           baseDate,
           stocks,
         });
+        this.marketDataEvents.emit('stocks');
 
         this.logger.log(
           `인기 종목 ${stocks.length}건 캐싱 완료 (${baseDate})`,
