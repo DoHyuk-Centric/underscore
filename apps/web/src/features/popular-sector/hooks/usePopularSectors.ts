@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getPopularSectors } from "../api/popular-sector-api";
+import { getNextKstRefreshTimestamp } from "../../../lib/kst-refresh";
 
 export function usePopularSectors() {
   const {
@@ -10,7 +11,11 @@ export function usePopularSectors() {
   } = useQuery({
     queryKey: ["popular-sectors"],
     queryFn: ({ signal }) => getPopularSectors(signal),
-    staleTime: 60 * 1000,
+    staleTime: (query) => {
+      const fetchedAt = query.state.dataUpdatedAt;
+      if (!fetchedAt) return 0;
+      return getNextKstRefreshTimestamp(fetchedAt) - fetchedAt;
+    },
   });
   return { sectors, isLoading, error, refetch };
 }

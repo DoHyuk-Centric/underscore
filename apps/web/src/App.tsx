@@ -6,6 +6,7 @@ import GuidePage from './pages/GuidePage'
 import HistoryPage from './pages/HistoryPage'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
+import { useDailyPopularDataSync } from './hooks/useDailyPopularDataSync'
 
 function TabLayout() {
   return (
@@ -20,6 +21,8 @@ function TabLayout() {
 }
 
 function App() {
+  useDailyPopularDataSync()
+
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/home" replace />} />
