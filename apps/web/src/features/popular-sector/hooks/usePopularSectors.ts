@@ -1,22 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPopularStocks } from "../api/popular-stock-api";
+import { getPopularSectors } from "../api/popular-sector-api";
 import { getNextKstRefreshTimestamp } from "../../../lib/kst-refresh";
 
-export function usePopularStocks() {
+export function usePopularSectors() {
   const {
-    data: stocks = [],
+    data: sectors = [],
     isLoading,
     error,
     refetch,
   } = useQuery({
-    queryKey: ["popular-stocks"],
-    queryFn: ({ signal }) => getPopularStocks(signal),
+    queryKey: ["popular-sectors"],
+    queryFn: ({ signal }) => getPopularSectors(signal),
     staleTime: (query) => {
       const fetchedAt = query.state.dataUpdatedAt;
       if (!fetchedAt) return 0;
       return getNextKstRefreshTimestamp(fetchedAt) - fetchedAt;
     },
   });
-
-  return { stocks, isLoading, error, refetch };
+  return { sectors, isLoading, error, refetch };
 }

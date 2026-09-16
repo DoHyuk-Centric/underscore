@@ -6,12 +6,13 @@ import GuidePage from './pages/GuidePage'
 import HistoryPage from './pages/HistoryPage'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
+import { useDailyPopularDataSync } from './hooks/useDailyPopularDataSync'
 
 function TabLayout() {
   return (
     <div className="grid grid-rows-[auto_1fr_auto] h-dvh">
       <Header />
-      <div className="h-full min-h-0 overflow-y-auto overflow-x-hidden">
+      <div className="h-full min-h-0 overflow-y-auto overflow-x-hidden scrollbar-gutter-stable">
         <Outlet />
       </div>
       <BottomNav />
@@ -20,6 +21,8 @@ function TabLayout() {
 }
 
 function App() {
+  useDailyPopularDataSync()
+
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/home" replace />} />
