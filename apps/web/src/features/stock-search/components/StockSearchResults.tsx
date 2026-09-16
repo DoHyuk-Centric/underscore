@@ -40,7 +40,7 @@ export function StockSearchResults({
 
     if (isLoading) {
       return showSkeleton ? (
-        <div className="mt-2.5 w-full min-w-0 overflow-hidden">
+        <div className="mt-2.5 min-w-0 flex-1 overflow-hidden">
           <Skeleton pattern="subtitleList" repeatLastItemCount={3} style={{ width: '100%' }} />
         </div>
       ) : null
@@ -55,7 +55,7 @@ export function StockSearchResults({
     }
 
     return (
-      <ul className="grid gap-2 mt-2.5 p-0 list-none">
+      <ul className="grid min-h-0 flex-1 gap-2 mt-2.5 overflow-y-auto p-0 list-none">
         {stocks.map((stock) => (
           <li
             className="flex items-center justify-between py-3.5 px-4 rounded-[14px] bg-white"

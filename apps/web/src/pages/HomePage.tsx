@@ -11,18 +11,18 @@ function HomePage() {
   const isSearching = Boolean(query.trim())
 
   return (
-    <main className="flex min-h-full flex-col px-2 pb-6 bg-[#f7f8fa]">
-      <section className="mt-3 rounded-[20px] bg-white px-3 py-1">
+    <main className="flex h-full min-h-0 flex-col bg-[#f7f8fa] px-2 pb-6">
+      <section
+        className={`mt-3 rounded-[20px] bg-white px-3 py-1 ${
+          isSearching ? 'flex min-h-0 flex-1 flex-col' : ''
+        }`}
+      >
         <StockSearchBar
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           onDeleteClick={() => setQuery('')}
         />
-        {isSearching ? (
-          <StockSearchResults query={query} {...searchState} />
-        ) : (
-          <PopularStocks />
-        )}
+        {isSearching ? <StockSearchResults query={query} {...searchState} /> : <PopularStocks />}
       </section>
       {!isSearching && (
         <div className="flex w-full shrink-0 justify-end">
