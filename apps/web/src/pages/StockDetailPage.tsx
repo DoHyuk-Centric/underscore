@@ -2,6 +2,7 @@ import { useParams, useLocation, Navigate } from 'react-router-dom'
 import { StockDetailHeader } from '../features/stock-detail/components/StockDetailHeader'
 import { StockPriceSummary } from '../features/stock-detail/components/StockPriceSummary'
 import { StockChart } from '../features/stock-detail/components/StockChart'
+import { AiDiagnosisButton } from '../features/stock-detail/components/AiDiagnosisButton'
 import { StockInfoGrid } from '../features/stock-detail/components/StockInfoGrid'
 import { StockDetailSkeleton } from '../features/stock-detail/components/StockDetailSkeleton'
 import { ListError } from '../components/ListError'
@@ -42,6 +43,7 @@ function StockDetailPage() {
           <section className="stock-detail__overview" aria-label="주가와 차트">
             <StockPriceSummary stock={stock} />
             <StockChart key={stockCode} charts={stock.charts} dayChangeRate={stock.changeRate} />
+            <AiDiagnosisButton />
           </section>
           <StockInfoGrid stock={stock} />
           <p className="stock-detail__notice">현재 상세 정보와 차트에는 예시 데이터가 포함되어 있어요.</p>

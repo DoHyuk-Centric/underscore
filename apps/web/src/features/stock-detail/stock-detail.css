@@ -50,6 +50,9 @@
 .stock-chart__periods button:hover { background: #e9edf2; }
 .stock-chart__periods button[aria-pressed="true"] { background: #fff; color: #191f28; font-weight: 700; box-shadow: 0 1px 5px #191f2810; }
 .stock-chart__empty { display: grid; place-items: center; height: 297px; color: #8b95a1; font-size: 14px; }
+.ai-diagnosis { padding: 0 30px 30px; }
+.ai-diagnosis__button { display: flex; width: 100%; min-height: 52px; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 14px; background: linear-gradient(135deg, #3182f6, #6366f1); color: #fff; font-size: 15px; font-weight: 700; }
+.ai-diagnosis__button:hover { filter: brightness(1.06); }
 .stock-info { padding: 26px; }
 .stock-info > h2 { margin-bottom: 24px; font-size: 19px; font-weight: 700; letter-spacing: -.5px; }
 .stock-info__section + .stock-info__section { margin-top: 24px; padding-top: 22px; border-top: 1px solid #f0f2f4; }
@@ -82,6 +85,7 @@
   .stock-quote { padding: 26px 24px 0; }
   .stock-chart { padding: 26px 24px 24px; }
   .stock-chart__plot { height: 220px; }
+  .ai-diagnosis { padding: 0 24px 26px; }
   .stock-info { padding: 24px; }
 }
 
@@ -94,6 +98,7 @@
   .stock-quote__price > span { font-size: 22px; }
   .stock-chart { padding: 26px 22px 24px; }
   .stock-chart__plot { height: 200px; }
+  .ai-diagnosis { padding: 0 22px 26px; }
   .stock-info { margin: 0 12px; padding: 24px 22px; border: 0; border-radius: 20px; }
   .stock-detail .stock-detail__notice { padding: 8px 24px; }
   .stock-detail__skeleton { padding: 24px; }
