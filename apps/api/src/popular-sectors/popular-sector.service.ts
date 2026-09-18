@@ -4,31 +4,30 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import type { PopularSector } from '@underscore/shared';
+import type { PopularStock } from '@underscore/shared';
 import { getYesterdayKstBasDt } from '../common/utils/kst-date.util.js';
+import { loadLatestTradingItems } from '../common/market-data/load-latest-trading-items.js';
 import { MarketDataEventsService } from '../market-data-events/market-data-events.service.js';
-import { KrxIndexClient } from './clients/krx-index.client.js';
+import { KrxTradingClient } from '../popular-stocks/clients/krx-trading.client.js';
+import { rankSurgingStocks } from '../popular-stocks/popular-stock.ranker.js';
 import { PopularSectorCache } from './popular-sector.cache.js';
-import { rankPopularSectors } from './popular-sector.ranker.js';
-
-const MAX_LOOKBACK_DAYS = 10;
 
 @Injectable()
 export class PopularSectorService {
   private readonly logger = new Logger(PopularSectorService.name);
-  private pending: Promise<PopularSector[]> | null = null;
+  private pending: Promise<PopularStock[]> | null = null;
 
   constructor(
-    private readonly krxIndexClient: KrxIndexClient,
+    private readonly krxTradingClient: KrxTradingClient,
     private readonly popularSectorCache: PopularSectorCache,
     private readonly marketDataEvents: MarketDataEventsService,
   ) {}
 
-  async getPopularSectors(): Promise<PopularSector[]> {
+  async getPopularSectors(): Promise<PopularStock[]> {
     const checkedDate = getYesterdayKstBasDt();
     const cached = this.popularSectorCache.get(checkedDate);
 
-    if (cached) return cached.sectors;
+    if (cached) return cached.stocks;
 
     return this.refresh();
   }
@@ -45,11 +44,11 @@ export class PopularSectorService {
     }
   }
 
-  private async refresh(): Promise<PopularSector[]> {
+  private async refresh(): Promise<PopularStock[]> {
     // 동시에 들어온 요청은 같은 조회 작업을 기다립니다.
     if (this.pending) return this.pending;
 
-    this.pending = this.loadLatestSectors();
+    this.pending = this.loadSurgingStocks();
 
     try {
       return await this.pending;
@@ -58,63 +57,48 @@ export class PopularSectorService {
     }
   }
 
-  private async loadLatestSectors(): Promise<PopularSector[]> {
+  private async loadSurgingStocks(): Promise<PopularStock[]> {
     const checkedDate = getYesterdayKstBasDt();
 
-    // 날짜 이동 계산에는 UTC를 사용해 실행 환경의 시간대 영향을 줄입니다.
-    const date = new Date(
-      `${checkedDate.slice(0, 4)}-${checkedDate.slice(4, 6)}-${checkedDate.slice(6, 8)}T00:00:00Z`,
-    );
-
     try {
-      for (let offset = 0; offset < MAX_LOOKBACK_DAYS; offset++) {
-        const baseDate = date
-          .toISOString()
-          .slice(0, 10)
-          .replaceAll('-', '');
+      const latest = await loadLatestTradingItems(this.krxTradingClient);
 
-        const day = date.getUTCDay();
-        date.setUTCDate(date.getUTCDate() - 1);
-
-        if (day === 0 || day === 6) continue;
-
-        const items = await this.krxIndexClient.fetchDailyIndices(baseDate);
-
-        // 정상 응답이지만 데이터가 없으면 이전 날짜로 이동합니다.
-        if (items.length === 0) continue;
-
-        const sectors = rankPopularSectors(items);
-
-        // 원본이 있는데 모두 제외됐다면 휴장일로 취급하지 않습니다.
-        if (sectors.length === 0) {
-          throw new Error(
-            `인기 섹터 필터링 결과가 없습니다. 기준일=${baseDate}, 원본=${items.length}건`,
-          );
-        }
-
-        this.popularSectorCache.set({ checkedDate, baseDate, sectors });
-        this.marketDataEvents.emit('sectors');
-
-        this.logger.log(`인기 섹터 ${sectors.length}건 캐싱 완료 (${baseDate})`);
-
-        return sectors;
+      if (!latest) {
+        throw new Error('최근 거래 데이터가 없습니다.');
       }
 
-      throw new Error(`최근 ${MAX_LOOKBACK_DAYS}일 내 지수 데이터가 없습니다.`);
+      const stocks = rankSurgingStocks(latest.items);
+
+      if (stocks.length === 0) {
+        throw new Error(
+          `급등 종목 필터링 결과가 없습니다. 기준일=${latest.baseDate}, 원본=${latest.items.length}건`,
+        );
+      }
+
+      this.popularSectorCache.set({
+        checkedDate,
+        baseDate: latest.baseDate,
+        stocks,
+      });
+      this.marketDataEvents.emit('sectors');
+
+      this.logger.log(`급등 종목 ${stocks.length}건 캐싱 완료 (${latest.baseDate})`);
+
+      return stocks;
     } catch (error) {
       this.logger.error(
-        '인기 섹터 갱신 실패',
+        '급등 종목 갱신 실패',
         error instanceof Error ? error.stack : String(error),
       );
 
       const previous = this.popularSectorCache.getLatest();
 
       if (previous) {
-        this.logger.warn(`기존 인기 섹터 데이터를 반환합니다 (${previous.baseDate})`);
-        return previous.sectors;
+        this.logger.warn(`기존 급등 종목 데이터를 반환합니다 (${previous.baseDate})`);
+        return previous.stocks;
       }
 
-      throw new ServiceUnavailableException('인기 섹터 데이터를 일시적으로 불러올 수 없습니다.');
+      throw new ServiceUnavailableException('급등 종목 데이터를 일시적으로 불러올 수 없습니다.');
     }
   }
 }

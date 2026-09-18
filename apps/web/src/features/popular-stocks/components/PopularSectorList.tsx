@@ -1,5 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import type { PopularSector } from "@underscore/shared";
+import type { PopularStock } from "@underscore/shared";
 import { PopularList } from "../../../components/PopularList";
 import { PopularListError } from "../../../components/PopularListError";
 import { PopularListSkeleton } from "../../../components/PopularListSkeleton";
@@ -7,62 +6,52 @@ import { getChangeRatePresentation } from "../../../lib/change-rate-presentation
 
 type Props = {
   expanded: boolean;
-  sectors: PopularSector[];
+  stocks: PopularStock[];
   isLoading: boolean;
   error: unknown;
   refetch: () => void;
 };
 
-function formatTradingValue(value: number): string {
-  const 조 = 1_000_000_000_000;
-  const 억 = 100_000_000;
-
-  if (value >= 조) {
-    return `${(value / 조).toFixed(1)}조원`;
-  }
-  return `${Math.round(value / 억).toLocaleString()}억원`;
-}
-
 export function PopularSectorList({
   expanded,
-  sectors,
+  stocks,
   isLoading,
   error,
   refetch,
 }: Props) {
-  const navigate = useNavigate();
-  const hasSectors = sectors.length > 0;
+  const hasStocks = stocks.length > 0;
 
-  if (error && !hasSectors) {
+  if (error && !hasStocks) {
     return (
       <PopularListError
-        message="인기 섹터를 불러오지 못했어요."
+        message="급등 종목을 불러오지 못했어요."
         onRetry={refetch}
       />
     );
   }
 
-  if (isLoading && !hasSectors) {
+  if (isLoading && !hasStocks) {
     return <PopularListSkeleton />;
   }
 
-  const items = sectors.map((sector) => {
-    const change = getChangeRatePresentation(sector.changeRate);
+  const items = stocks.map((stock) => {
+    const change = getChangeRatePresentation(stock.changeRate);
 
     return {
-      key: sector.name,
-      rank: sector.rank,
-      name: sector.name,
-      detail: formatTradingValue(sector.tradingValue),
-      right: <strong className={`text-[15px] ${change.className}`}>{change.text}</strong>,
+      key: stock.stockCode,
+      rank: stock.rank,
+      name: stock.name,
+      detail: `${stock.market} · ${stock.stockCode}`,
+      right: (
+        <span className="grid gap-1 text-right">
+          <strong className="text-[15px] text-[#191f28]">
+            {stock.price.toLocaleString()}원
+          </strong>
+          <small className={`text-xs ${change.className}`}>{change.text}</small>
+        </span>
+      ),
     };
   });
 
-  return (
-    <PopularList
-      items={items}
-      expanded={expanded}
-      onSelect={(sectorName) => navigate(`/sectors/${encodeURIComponent(sectorName)}`)}
-    />
-  );
+  return <PopularList items={items} expanded={expanded} />;
 }

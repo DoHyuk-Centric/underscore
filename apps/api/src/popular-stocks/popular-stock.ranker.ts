@@ -15,6 +15,24 @@ export function rankPopularStocks(
     .map((item, index) => toPopularStock(item, index + 1));
 }
 
+/**
+ * 등락률이 높은 순으로 정렬하고, 등락률이 같으면(상한가 등) 거래대금이 큰 종목을 상위로 둔다.
+ */
+export function rankSurgingStocks(
+  items: KrxTradingItem[],
+  limit = 10,
+): PopularStock[] {
+  return [...items]
+    .filter(isEligibleStock)
+    .sort(
+      (a, b) =>
+        toNumber(b.FLUC_RT) - toNumber(a.FLUC_RT) ||
+        toNumber(b.ACC_TRDVAL) - toNumber(a.ACC_TRDVAL),
+    )
+    .slice(0, limit)
+    .map((item, index) => toPopularStock(item, index + 1));
+}
+
 function isEligibleStock(item: KrxTradingItem): boolean {
   const name = item.ISU_NM ?? '';
   const price = toNumber(item.TDD_CLSPRC);

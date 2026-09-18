@@ -18,7 +18,7 @@ export function PopularStocks() {
   const sectorState = usePopularSectors();
   const activeItemCount = isStockTab
     ? stockState.stocks.length
-    : sectorState.sectors.length;
+    : sectorState.stocks.length;
   const activeState = isStockTab ? stockState : sectorState;
   const canExpand = !activeState.isLoading && activeItemCount > 5;
   const hideFooter = Boolean(activeState.error) && activeItemCount === 0;
@@ -45,18 +45,18 @@ export function PopularStocks() {
         onChange={changeTab}
       >
         <SegmentedControl.Item value="stocks">인기 종목</SegmentedControl.Item>
-        <SegmentedControl.Item value="sectors">인기 섹터</SegmentedControl.Item>
+        <SegmentedControl.Item value="sectors">급등 종목</SegmentedControl.Item>
       </SegmentedControl>
 
       <ListHeader
         title={
           <ListHeader.TitleParagraph id="popular-list-title">
-            {isStockTab ? "현재 거래대금이 많은 종목" : "현재 많이 상승한 섹터"}
+            {isStockTab ? "현재 거래대금이 많은 종목" : "오늘 가장 많이 오른 종목"}
           </ListHeader.TitleParagraph>
         }
         description={
           <ListHeader.DescriptionParagraph>
-            {isStockTab ? "거래대금 기준" : "업종지수 등락률 기준"}
+            {isStockTab ? "거래대금 기준" : "전일 대비 등락률 기준"}
           </ListHeader.DescriptionParagraph>
         }
         descriptionPosition="bottom"
