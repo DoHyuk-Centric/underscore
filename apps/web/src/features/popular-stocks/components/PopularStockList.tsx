@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import type { PopularStock } from "@underscore/shared";
 import { PopularList } from "../../../components/PopularList";
 import { PopularListError } from "../../../components/PopularListError";
@@ -20,8 +19,6 @@ export function PopularStockList({
   error,
   refetch,
 }: Props) {
-  const navigate = useNavigate();
-
   const hasStocks = stocks.length > 0;
 
   if (error && !hasStocks) {
@@ -56,22 +53,5 @@ export function PopularStockList({
     };
   });
 
-  const goToDetail = (stockCode: string) => {
-    const stock = stocks.find((item) => item.stockCode === stockCode);
-    if (!stock) return;
-
-    navigate(`/stocks/${stock.stockCode}`, {
-      state: {
-        name: stock.name,
-        market: stock.market,
-        price: stock.price,
-        change: stock.change,
-        changeRate: stock.changeRate,
-        volume: stock.volume,
-        tradingValue: stock.tradingValue,
-      },
-    });
-  };
-
-  return <PopularList items={items} expanded={expanded} onSelect={goToDetail} />;
+  return <PopularList items={items} expanded={expanded} />;
 }

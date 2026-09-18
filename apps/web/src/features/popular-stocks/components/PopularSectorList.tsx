@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import type { PopularSector } from "@underscore/shared";
 import { PopularList } from "../../../components/PopularList";
 import { PopularListError } from "../../../components/PopularListError";
@@ -29,6 +30,7 @@ export function PopularSectorList({
   error,
   refetch,
 }: Props) {
+  const navigate = useNavigate();
   const hasSectors = sectors.length > 0;
 
   if (error && !hasSectors) {
@@ -56,5 +58,11 @@ export function PopularSectorList({
     };
   });
 
-  return <PopularList items={items} expanded={expanded} />;
+  return (
+    <PopularList
+      items={items}
+      expanded={expanded}
+      onSelect={(sectorName) => navigate(`/sectors/${encodeURIComponent(sectorName)}`)}
+    />
+  );
 }
