@@ -7,7 +7,7 @@ type Props = {
   stockCode: string;
 };
 
-export function StockDetailHeader({ name, market, stockCode }: Props) {
+export const StockDetailHeader = ({ name, market, stockCode }: Props) => {
   const navigate = useNavigate();
 
   return (

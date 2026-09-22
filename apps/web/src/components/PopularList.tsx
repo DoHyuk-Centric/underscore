@@ -18,7 +18,7 @@ type Props = {
   onSelect?: (key: string) => void;
 };
 
-export function PopularList({ items, expanded, onSelect }: Props) {
+export const PopularList = ({ items, expanded, onSelect }: Props) => {
   return (
     <ol className="m-0 list-none p-0">
       {items.map((item, index) => {
@@ -66,4 +66,4 @@ export function PopularList({ items, expanded, onSelect }: Props) {
       })}
     </ol>
   );
-}
+};

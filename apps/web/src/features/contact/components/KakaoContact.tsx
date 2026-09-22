@@ -1,6 +1,6 @@
 import './KakaoContact.css'
 
-export function KakaoContact() {
+export const KakaoContact = () => {
   return (
     <a
       className="kakao-contact"
@@ -19,3 +19,4 @@ export function KakaoContact() {
     </a>
   )
 }
+

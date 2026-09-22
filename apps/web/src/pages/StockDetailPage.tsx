@@ -7,7 +7,7 @@ import { ListError } from '../components/ListError'
 
 type StockDetailLocationState = Omit<PopularStock, 'rank' | 'stockCode'>
 
-function StockDetailPage() {
+const StockDetailPage = () => {
   const { stockCode = '' } = useParams<{ stockCode: string }>()
   const location = useLocation()
   const navigate = useNavigate()

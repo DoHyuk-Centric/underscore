@@ -246,15 +246,15 @@ const RICH_DIAGNOSES: Record<string, RichDiagnosis> = {
   },
 };
 
-function formatTradingValue(value: number): string {
+const formatTradingValue = (value: number): string => {
   const 조 = 1_000_000_000_000;
   const 억 = 100_000_000;
 
   if (value >= 조) return `${(value / 조).toFixed(1)}조원`;
   return `${Math.round(value / 억).toLocaleString()}억원`;
-}
+};
 
-function buildFallbackDiagnosis(stock: PopularStock): RichDiagnosis {
+const buildFallbackDiagnosis = (stock: PopularStock): RichDiagnosis => {
   return {
     headline:
       `${stock.name}은(는) 전일 대비 +${stock.changeRate.toFixed(2)}% 상승하며 ` +
@@ -262,8 +262,8 @@ function buildFallbackDiagnosis(stock: PopularStock): RichDiagnosis {
     caution:
       "실제 급등 배경은 뉴스·공시 분석 기능이 준비되는 대로 정확하게 알려드릴게요.",
   };
-}
+};
 
-export function getDiagnosis(stock: PopularStock): RichDiagnosis {
+export const getDiagnosis = (stock: PopularStock): RichDiagnosis => {
   return RICH_DIAGNOSES[stock.stockCode] ?? buildFallbackDiagnosis(stock);
-}
+};

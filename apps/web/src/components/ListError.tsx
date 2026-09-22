@@ -5,7 +5,7 @@ type Props = {
   fill?: boolean;
 };
 
-export function ListError({ message, onRetry, retryLabel = "다시 시도", fill = false }: Props) {
+export const ListError = ({ message, onRetry, retryLabel = "다시 시도", fill = false }: Props) => {
   const containerClassName = fill
     ? "flex h-full flex-col items-center justify-center gap-2 px-4 text-center"
     : "flex flex-col items-center justify-center gap-2 px-4 py-10 text-center";

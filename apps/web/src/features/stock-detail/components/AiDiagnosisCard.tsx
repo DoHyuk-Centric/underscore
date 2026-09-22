@@ -7,22 +7,22 @@ type Props = {
   stock: PopularStock;
 };
 
-function SectionLabel({
+const SectionLabel = ({
   icon: Icon,
   children,
 }: {
   icon: typeof Building2;
   children: string;
-}) {
+}) => {
   return (
     <div className="flex items-center gap-1.5 text-[#8b95a1]">
       <Icon size={13} aria-hidden="true" />
       <span className="text-xs font-semibold">{children}</span>
     </div>
   );
-}
+};
 
-export function AiDiagnosisCard({ stock }: Props) {
+export const AiDiagnosisCard = ({ stock }: Props) => {
   const { stocks: topSurgingStocks, isLoading } = usePopularSectors();
   const isEligible = topSurgingStocks.some(
     (surging) => surging.stockCode === stock.stockCode,
@@ -46,9 +46,9 @@ export function AiDiagnosisCard({ stock }: Props) {
       )}
     </section>
   );
-}
+};
 
-function DiagnosisContent({ stock }: Props) {
+const DiagnosisContent = ({ stock }: Props) => {
   const diagnosis = getDiagnosis(stock);
 
   return (
@@ -124,4 +124,4 @@ function DiagnosisContent({ stock }: Props) {
       </span>
     </div>
   );
-}
+};

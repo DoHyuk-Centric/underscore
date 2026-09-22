@@ -6,7 +6,7 @@ type NoSearchResultsProps = {
   similarWords?: string[]
 }
 
-export function NoSearchResults({ query, similarWords = [] }: NoSearchResultsProps) {
+export const NoSearchResults = ({ query, similarWords = [] }: NoSearchResultsProps) => {
   return (
     <SearchEmptyState icon="×" title={`'${query}'에 대한 검색 결과가 없어요`}>
       <SimilarStockSuggestions words={similarWords} />

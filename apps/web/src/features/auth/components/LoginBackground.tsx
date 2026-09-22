@@ -2,7 +2,7 @@ interface LoginBackgroundProps {
   visible: boolean
 }
 
-function LoginBackground({ visible }: LoginBackgroundProps) {
+const LoginBackground = ({ visible }: LoginBackgroundProps) => {
   return (
     <div
       className={`stock-hanzi-cloud ${visible ? 'stock-hanzi-cloud-ready' : 'stock-hanzi-cloud-pending'}`}

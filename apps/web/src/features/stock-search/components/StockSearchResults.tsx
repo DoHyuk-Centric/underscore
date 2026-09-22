@@ -15,12 +15,12 @@ type StockSearchResultsProps = {
   error: string | null
 }
 
-export function StockSearchResults({
+export const StockSearchResults = ({
   query,
   stocks,
   isLoading,
   error,
-}: StockSearchResultsProps) {
+}: StockSearchResultsProps) => {
   const [showSkeleton, setShowSkeleton] = useState(false)
 
   useEffect(() => {
@@ -76,3 +76,4 @@ export function StockSearchResults({
 
   return <div className="flex-1 min-h-0 flex flex-col">{content}</div>
 }
+

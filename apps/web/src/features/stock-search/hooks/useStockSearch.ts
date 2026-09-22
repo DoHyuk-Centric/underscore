@@ -17,7 +17,7 @@ type StockSearchResult = {
 const DEBOUNCE_MS = 300;
 export const MIN_QUERY_LENGTH = 2;
 
-export function useStockSearch(query: string): StockSearchResult {
+export const useStockSearch = (query: string): StockSearchResult => {
   const [state, setState] = useState<StockSearchState>({
     stocks: [],
     error: null,

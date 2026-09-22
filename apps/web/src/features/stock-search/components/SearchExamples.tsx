@@ -1,6 +1,6 @@
 const EXAMPLES = ['삼전(삼성전자)', '카뱅(카카오뱅크)', '한전(한국전력)']
 
-export function SearchExamples() {
+export const SearchExamples = () => {
   return (
     <div className="flex flex-col items-start gap-1.5 mt-8 text-[#8b95a1] text-xs text-left">
       <span>이렇게도 검색해보세요!</span>

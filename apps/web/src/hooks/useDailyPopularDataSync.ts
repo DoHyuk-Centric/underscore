@@ -6,7 +6,7 @@ const QUERY_KEY_BY_TYPE: Record<string, string[]> = {
   sectors: ['popular-sectors'],
 }
 
-export function useDailyPopularDataSync() {
+export const useDailyPopularDataSync = () => {
   const queryClient = useQueryClient()
 
   useEffect(() => {
@@ -21,3 +21,4 @@ export function useDailyPopularDataSync() {
     return () => source.close()
   }, [queryClient])
 }
+

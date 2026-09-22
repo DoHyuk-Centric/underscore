@@ -1,36 +1,6 @@
 import { NavLink } from 'react-router-dom'
 
-const NAV_ITEMS = [
-  { to: '/home', label: '홈', Icon: HomeIcon },
-  { to: '/ai', label: 'AI', Icon: AiIcon },
-  { to: '/history', label: '기록', Icon: HistoryIcon },
-] as const
-
-export function BottomNav() {
-  return (
-    <nav
-      className="flex shrink-0 h-14 bg-white border-t border-[#f0f1f3] pb-[env(safe-area-inset-bottom)]"
-      aria-label="주요 메뉴"
-    >
-      {NAV_ITEMS.map(({ to, label, Icon }) => (
-        <NavLink
-          key={to}
-          to={to}
-          className={({ isActive }) =>
-            `flex flex-1 flex-col items-center justify-center gap-0.5 text-[11px] font-semibold no-underline ${
-              isActive ? 'text-[#3182f6]' : 'text-[#8b95a1]'
-            }`
-          }
-        >
-          <Icon />
-          <span>{label}</span>
-        </NavLink>
-      ))}
-    </nav>
-  )
-}
-
-function HomeIcon() {
+const HomeIcon = () => {
   return (
     <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
@@ -44,7 +14,7 @@ function HomeIcon() {
   )
 }
 
-function AiIcon() {
+const AiIcon = () => {
   return (
     <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M12 3v2.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -66,7 +36,7 @@ function AiIcon() {
   )
 }
 
-function HistoryIcon() {
+const HistoryIcon = () => {
   return (
     <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
@@ -78,5 +48,35 @@ function HistoryIcon() {
       />
       <path d="M20 4v3.5h-3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
+  )
+}
+
+const NAV_ITEMS = [
+  { to: '/home', label: '홈', Icon: HomeIcon },
+  { to: '/ai', label: 'AI', Icon: AiIcon },
+  { to: '/history', label: '기록', Icon: HistoryIcon },
+] as const
+
+export const BottomNav = () => {
+  return (
+    <nav
+      className="flex shrink-0 h-14 bg-white border-t border-[#f0f1f3] pb-[env(safe-area-inset-bottom)]"
+      aria-label="주요 메뉴"
+    >
+      {NAV_ITEMS.map(({ to, label, Icon }) => (
+        <NavLink
+          key={to}
+          to={to}
+          className={({ isActive }) =>
+            `flex flex-1 flex-col items-center justify-center gap-0.5 text-[11px] font-semibold no-underline ${
+              isActive ? 'text-[#3182f6]' : 'text-[#8b95a1]'
+            }`
+          }
+        >
+          <Icon />
+          <span>{label}</span>
+        </NavLink>
+      ))}
+    </nav>
   )
 }

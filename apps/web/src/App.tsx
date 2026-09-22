@@ -9,7 +9,7 @@ import LoginPage from './pages/LoginPage'
 import StockDetailPage from './pages/StockDetailPage'
 import { useDailyPopularDataSync } from './hooks/useDailyPopularDataSync'
 
-function TabLayout() {
+const TabLayout = () => {
   return (
     <div className="grid grid-rows-[auto_1fr_auto] h-dvh">
       <Header />
@@ -21,7 +21,7 @@ function TabLayout() {
   )
 }
 
-function App() {
+const App = () => {
   useDailyPopularDataSync()
 
   return (
@@ -41,3 +41,4 @@ function App() {
 }
 
 export default App
+

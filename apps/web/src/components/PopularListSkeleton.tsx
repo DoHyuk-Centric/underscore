@@ -3,16 +3,16 @@ import "./PopularList.css";
 
 const PLACEHOLDER_COUNT = 5;
 
-function Bar({ width }: { width: number }) {
+const Bar = ({ width }: { width: number }) => {
   return (
     <span
       className="inline-block h-3.5 animate-pulse rounded bg-[#f2f4f6]"
       style={{ width }}
     />
   );
-}
+};
 
-export function PopularListSkeleton() {
+export const PopularListSkeleton = () => {
   return (
     <ol className="m-0 list-none p-0">
       {Array.from({ length: PLACEHOLDER_COUNT }, (_, index) => (
@@ -41,4 +41,4 @@ export function PopularListSkeleton() {
       ))}
     </ol>
   );
-}
+};

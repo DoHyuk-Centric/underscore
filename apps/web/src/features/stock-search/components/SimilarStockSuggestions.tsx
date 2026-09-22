@@ -2,7 +2,7 @@ type SimilarStockSuggestionsProps = {
   words: string[]
 }
 
-export function SimilarStockSuggestions({ words }: SimilarStockSuggestionsProps) {
+export const SimilarStockSuggestions = ({ words }: SimilarStockSuggestionsProps) => {
   if (words.length === 0) {
     return (
       <p className="mt-8 text-[#8b95a1] text-xs text-center">

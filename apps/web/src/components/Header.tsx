@@ -1,6 +1,6 @@
 import { IconButton } from '@toss/tds-mobile'
 
-export function Header() {
+export const Header = () => {
   return (
     <header className="flex items-center justify-between py-1 px-3 bg-white border-b border-[#f0f1f3]">
       <div className="flex items-center gap-2 text-[#191f28] text-xl font-extrabold tracking-tighter">

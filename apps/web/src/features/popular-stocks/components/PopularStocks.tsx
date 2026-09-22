@@ -9,7 +9,7 @@ import "../../../components/PopularList.css";
 
 type PopularTab = "stocks" | "sectors";
 
-export function PopularStocks() {
+export const PopularStocks = () => {
   const [selectedTab, setSelectedTab] = useState<PopularTab>("stocks");
   const [expanded, setExpanded] = useState(false);
   const isStockTab = selectedTab === "stocks";
@@ -89,4 +89,4 @@ export function PopularStocks() {
       </button>
     </section>
   );
-}
+};

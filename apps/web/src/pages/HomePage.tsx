@@ -5,7 +5,7 @@ import { useStockSearch } from '../features/stock-search/hooks/useStockSearch'
 import { PopularStocks } from '../features/popular-stocks/components/PopularStocks'
 import { KakaoContact } from '../features/contact/components/KakaoContact'
 
-function HomePage() {
+const HomePage = () => {
   const [query, setQuery] = useState('')
   const searchState = useStockSearch(query)
   const isSearching = Boolean(query.trim())
@@ -38,3 +38,4 @@ function HomePage() {
 }
 
 export default HomePage
+

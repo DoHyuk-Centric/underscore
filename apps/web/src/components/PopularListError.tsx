@@ -5,10 +5,10 @@ type Props = {
   onRetry: () => void;
 };
 
-export function PopularListError({ message, onRetry }: Props) {
+export const PopularListError = ({ message, onRetry }: Props) => {
   return (
     <div className="flex items-center justify-center">
       <ListError message={message} onRetry={onRetry} />
     </div>
   );
-}
+};

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-export function useAsyncList<T>(fetcher: (signal: AbortSignal) => Promise<T[]>) {
+export const useAsyncList = <T,>(fetcher: (signal: AbortSignal) => Promise<T[]>) => {
   const [data, setData] = useState<T[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<unknown>(null)
@@ -29,3 +29,4 @@ export function useAsyncList<T>(fetcher: (signal: AbortSignal) => Promise<T[]>) 
 
   return { data, isLoading, error, refetch }
 }
+

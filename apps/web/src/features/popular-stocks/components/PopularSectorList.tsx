@@ -13,13 +13,13 @@ type Props = {
   refetch: () => void;
 };
 
-export function PopularSectorList({
+export const PopularSectorList = ({
   expanded,
   stocks,
   isLoading,
   error,
   refetch,
-}: Props) {
+}: Props) => {
   const navigate = useNavigate();
   const hasStocks = stocks.length > 0;
 
@@ -73,4 +73,4 @@ export function PopularSectorList({
   };
 
   return <PopularList items={items} expanded={expanded} onSelect={goToDetail} />;
-}
+};

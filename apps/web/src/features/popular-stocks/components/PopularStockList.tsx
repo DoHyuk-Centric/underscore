@@ -12,13 +12,13 @@ type Props = {
   refetch: () => void;
 };
 
-export function PopularStockList({
+export const PopularStockList = ({
   expanded,
   stocks,
   isLoading,
   error,
   refetch,
-}: Props) {
+}: Props) => {
   const hasStocks = stocks.length > 0;
 
   if (error && !hasStocks) {
@@ -54,4 +54,4 @@ export function PopularStockList({
   });
 
   return <PopularList items={items} expanded={expanded} />;
-}
+};

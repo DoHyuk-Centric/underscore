@@ -1,19 +1,19 @@
 import type { PopularStock } from "@underscore/shared";
 import { getChangeRatePresentation } from "../../../lib/change-rate-presentation";
 
-function formatTradingValue(value: number): string {
+const formatTradingValue = (value: number): string => {
   const 조 = 1_000_000_000_000;
   const 억 = 100_000_000;
 
   if (value >= 조) return `${(value / 조).toFixed(1)}조원`;
   return `${Math.round(value / 억).toLocaleString()}억원`;
-}
+};
 
 type Props = {
   stock: PopularStock;
 };
 
-export function StockPriceSummary({ stock }: Props) {
+export const StockPriceSummary = ({ stock }: Props) => {
   const change = getChangeRatePresentation(stock.changeRate);
   const changeSign = stock.change > 0 ? "+" : stock.change < 0 ? "-" : "";
 
