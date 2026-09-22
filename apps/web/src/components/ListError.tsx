@@ -1,10 +1,11 @@
 type Props = {
   message: string;
   onRetry: () => void;
+  retryLabel?: string;
   fill?: boolean;
 };
 
-export function ListError({ message, onRetry, fill = false }: Props) {
+export function ListError({ message, onRetry, retryLabel = "다시 시도", fill = false }: Props) {
   const containerClassName = fill
     ? "flex h-full flex-col items-center justify-center gap-2 px-4 text-center"
     : "flex flex-col items-center justify-center gap-2 px-4 py-10 text-center";
@@ -25,7 +26,7 @@ export function ListError({ message, onRetry, fill = false }: Props) {
         className="mt-1 rounded-lg px-3 py-1.5 text-sm font-semibold text-[#3182f6]"
         onClick={onRetry}
       >
-        다시 시도
+        {retryLabel}
       </button>
     </div>
   );
