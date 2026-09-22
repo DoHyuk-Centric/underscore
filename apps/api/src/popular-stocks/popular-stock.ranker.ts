@@ -15,9 +15,6 @@ export function rankPopularStocks(
     .map((item, index) => toPopularStock(item, index + 1));
 }
 
-/**
- * 등락률이 높은 순으로 정렬하고, 등락률이 같으면(상한가 등) 거래대금이 큰 종목을 상위로 둔다.
- */
 export function rankSurgingStocks(
   items: KrxTradingItem[],
   limit = 10,
@@ -33,11 +30,14 @@ export function rankSurgingStocks(
     .map((item, index) => toPopularStock(item, index + 1));
 }
 
+const NORMAL_DAILY_LIMIT_RATE = 30.5;
+
 function isEligibleStock(item: KrxTradingItem): boolean {
   const name = item.ISU_NM ?? '';
   const price = toNumber(item.TDD_CLSPRC);
   const volume = toNumber(item.ACC_TRDVOL);
   const tradingValue = toNumber(item.ACC_TRDVAL);
+  const changeRate = toNumber(item.FLUC_RT);
 
   const isSpac = /(스팩|SPAC|기업인수목적)/i.test(name);
   const isPreferredStock = /우(?:B|C)?$/i.test(name);
@@ -49,7 +49,8 @@ function isEligibleStock(item: KrxTradingItem): boolean {
     !isReit &&
     price > 0 &&
     volume > 0 &&
-    tradingValue > 0
+    tradingValue > 0 &&
+    Math.abs(changeRate) <= NORMAL_DAILY_LIMIT_RATE
   );
 }
 
