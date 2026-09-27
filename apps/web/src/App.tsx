@@ -1,5 +1,7 @@
+import { useCallback, useState } from 'react'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { BottomNav } from './components/BottomNav'
+import { FullscreenNavigationMenu } from './components/FullscreenNavigationMenu'
 import { Header } from './components/Header'
 import AiPage from './pages/AiPage'
 import GuidePage from './pages/GuidePage'
@@ -8,13 +10,18 @@ import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 
 function TabLayout() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const openMenu = useCallback(() => setIsMenuOpen(true), [])
+  const closeMenu = useCallback(() => setIsMenuOpen(false), [])
+
   return (
     <div className="grid grid-rows-[auto_1fr_auto] h-dvh">
-      <Header />
+      <Header isMenuOpen={isMenuOpen} onMenuOpen={openMenu} />
       <div className="h-full min-h-0 overflow-y-auto overflow-x-hidden">
         <Outlet />
       </div>
       <BottomNav />
+      <FullscreenNavigationMenu open={isMenuOpen} onClose={closeMenu} />
     </div>
   )
 }

@@ -1,6 +1,11 @@
-import { IconButton } from '@toss/tds-mobile'
+import { IconButton } from "@toss/tds-mobile";
 
-export function Header() {
+interface HeaderProps {
+  isMenuOpen: boolean;
+  onMenuOpen: () => void;
+}
+
+export function Header({ isMenuOpen, onMenuOpen }: HeaderProps) {
   return (
     <header className="flex items-center justify-between py-1 px-3 bg-white border-b border-[#f0f1f3]">
       <div className="flex items-center gap-2 text-[#191f28] text-xl font-extrabold tracking-tighter">
@@ -13,11 +18,16 @@ export function Header() {
         밑줄
       </div>
       <IconButton
-        src="/icon-menu.svg"
-        aria-label="메뉴 열기"
-        bgColor="transparent"
+        name="icon-line-three-mono"
+        variant="clear"
+        color="#4E5968"
         iconSize={24}
+        aria-label="메뉴 열기"
+        aria-expanded={isMenuOpen}
+        aria-controls="fullscreen-navigation-menu"
+        aria-haspopup="dialog"
+        onClick={onMenuOpen}
       />
     </header>
-  )
+  );
 }
