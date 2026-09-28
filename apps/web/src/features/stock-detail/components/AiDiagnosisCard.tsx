@@ -1,7 +1,6 @@
 import { AlertTriangle, Building2, ExternalLink, LineChart, Sparkles } from "lucide-react";
-import type { PopularStock } from "@underscore/shared";
-import { usePopularSectors } from "../../popular-sector/hooks/usePopularSectors";
-import { getDiagnosis } from "../mock/ai-diagnosis-mock";
+import type { PopularStock, StockDiagnosis } from "@underscore/shared";
+import { useStockDiagnoses } from "../../stock-diagnosis/hooks/useStockDiagnoses";
 
 type Props = {
   stock: PopularStock;
@@ -23,10 +22,8 @@ const SectionLabel = ({
 };
 
 export const AiDiagnosisCard = ({ stock }: Props) => {
-  const { stocks: topSurgingStocks, isLoading } = usePopularSectors();
-  const isEligible = topSurgingStocks.some(
-    (surging) => surging.stockCode === stock.stockCode,
-  );
+  const { diagnoses, isLoading } = useStockDiagnoses();
+  const diagnosis = diagnoses.find((d) => d.stockCode === stock.stockCode);
 
   return (
     <section className="rounded-2xl bg-white p-4">
@@ -37,20 +34,18 @@ export const AiDiagnosisCard = ({ stock }: Props) => {
 
       {isLoading ? (
         <p className="m-0 mt-3 text-sm text-[#8b95a1]">확인하는 중이에요...</p>
-      ) : !isEligible ? (
+      ) : !diagnosis ? (
         <p className="m-0 mt-3 text-sm leading-relaxed text-[#8b95a1]">
           AI 진단은 오늘 급등 상위 10개 종목에만 제공돼요.
         </p>
       ) : (
-        <DiagnosisContent stock={stock} />
+        <DiagnosisContent diagnosis={diagnosis} />
       )}
     </section>
   );
 };
 
-const DiagnosisContent = ({ stock }: Props) => {
-  const diagnosis = getDiagnosis(stock);
-
+export const DiagnosisContent = ({ diagnosis }: { diagnosis: StockDiagnosis }) => {
   return (
     <div className="mt-3 grid gap-4">
       <div className="rounded-xl bg-[#eaf2fe] p-3">
@@ -118,10 +113,6 @@ const DiagnosisContent = ({ stock }: Props) => {
         <AlertTriangle size={15} className="mt-0.5 shrink-0 text-[#b45309]" aria-hidden="true" />
         <p className="m-0 text-[13px] leading-relaxed text-[#8a5a1f]">{diagnosis.caution}</p>
       </div>
-
-      <span className="inline-flex w-fit items-center gap-1 rounded-full bg-[#f2f4f6] px-2 py-1 text-[11px] font-semibold text-[#6b7684]">
-        예시 데이터
-      </span>
     </div>
   );
 };
