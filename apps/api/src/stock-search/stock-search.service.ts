@@ -1,6 +1,7 @@
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Injectable, Logger, type OnModuleInit } from '@nestjs/common';
 import { KRXStock } from '@underscore/shared';
+import { loadLatestBaseDateItems } from '../common/market-data/load-latest-base-date-items.js';
 import { KrxListedClient } from './clients/krx-listed.client.js';
 import { KrxStockMapper } from './mappers/krx-stock.mapper.js';
 import { StockStore } from './stock.store.js';
@@ -30,11 +31,15 @@ export class StockSearchService implements OnModuleInit {
 
   private async refresh(): Promise<void> {
     try {
-      const items = await this.krxListedClient.fetchListedInfo();
-      const stocks = this.krxStockMapper.toStocks(items);
+      const latest = await loadLatestBaseDateItems((baseDate) =>
+        this.krxListedClient.fetchListedInfo(baseDate),
+      );
+      if (!latest) throw new Error('최근 영업일의 종목 데이터가 없습니다.');
+
+      const stocks = this.krxStockMapper.toStocks(latest.items);
       if (stocks.length === 0) throw new Error('종목 데이터가 비어 있습니다.');
       this.stockStore.replace(stocks);
-      this.logger.log(`종목 ${stocks.length}건 캐싱 완료`);
+      this.logger.log(`종목 ${stocks.length}건 캐싱 완료 (기준일 ${latest.baseDate})`);
     } catch (error) {
       this.logger.error('종목 목록 갱신 실패', error);
     }

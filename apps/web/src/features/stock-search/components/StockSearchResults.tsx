@@ -55,7 +55,7 @@ export const StockSearchResults = ({
     }
 
     return (
-      <ul className="grid min-h-0 flex-1 gap-2 mt-2.5 overflow-y-auto p-0 list-none">
+      <ul className="m-0! mt-2.5! grid min-h-0 flex-1 content-start gap-2 overflow-y-auto p-0 list-none">
         {stocks.map((stock) => (
           <li
             className="flex items-center justify-between py-3.5 px-4 rounded-[14px] bg-white"
