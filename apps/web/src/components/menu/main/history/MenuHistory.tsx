@@ -1,6 +1,7 @@
 import { ChevronRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { MenuHistoryEmpty } from './MenuHistoryEmpty'
+import { MenuHistoryError } from './MenuHistoryError'
 import { MenuHistoryList } from './MenuHistoryList'
 import { MenuHistorySkeleton } from './MenuHistorySkeleton'
 
@@ -14,21 +15,27 @@ export interface AnalysisRecord {
 interface MenuHistoryProps {
   records: AnalysisRecord[]
   isLoading: boolean
+  isError: boolean
+  onRetry: () => void
   onClose: () => void
 }
 
 export const MAX_RECENT_RECORDS = 3
 
-export function MenuHistory({ records, isLoading, onClose }: MenuHistoryProps) {
+export function MenuHistory({ records, isLoading, isError, onRetry, onClose }: MenuHistoryProps) {
   const recentRecords = records.slice(0, MAX_RECENT_RECORDS)
   const isEmpty = recentRecords.length === 0
+  const showAllLink = !isLoading && !isError && !isEmpty
 
   const renderContent = () => {
     if (isLoading) {
       return <MenuHistorySkeleton />
     }
+    if (isError) {
+      return <MenuHistoryError onRetry={onRetry} />
+    }
     if (isEmpty) {
-      return <MenuHistoryEmpty slotCount={MAX_RECENT_RECORDS} onClose={onClose} />
+      return <MenuHistoryEmpty onClose={onClose} />
     }
     return <MenuHistoryList records={recentRecords} slotCount={MAX_RECENT_RECORDS} onClose={onClose} />
   }
@@ -37,7 +44,7 @@ export function MenuHistory({ records, isLoading, onClose }: MenuHistoryProps) {
     <section aria-labelledby="menu-history-title" aria-busy={isLoading} className="mt-5 rounded-[20px] bg-[#f7f8fa] p-5">
       <div className="flex items-center justify-between">
         <h3 id="menu-history-title" className="m-0! text-[13px] font-semibold text-[#6b7684]">최근 기록</h3>
-        {!isLoading && !isEmpty && (
+        {showAllLink && (
           <Link
             to="/history"
             onClick={onClose}

@@ -26,17 +26,3 @@ export function MenuHistoryCtaSlot({ label, onClose }: MenuHistoryCtaSlotProps) 
     </li>
   )
 }
-
-export function MenuHistoryPlaceholderSlots({ count }: { count: number }) {
-  return Array.from({ length: count }, (_, index) => (
-    <li key={index} aria-hidden="true" className="flex gap-3.5">
-      <span className="flex w-2.5 shrink-0 justify-center">
-        <span className="mt-1 size-2.5 rounded-full border-2 border-[#c9cfd6]" />
-      </span>
-      <span className="flex min-w-0 flex-1 flex-col gap-0.75 text-[#b0b8c1]">
-        <span className="h-4 text-xs font-medium">─</span>
-        <span className="h-5.5 text-[15px]">{index === 0 ? '아직 기록이 없어요' : ''}</span>
-      </span>
-    </li>
-  ))
-}
