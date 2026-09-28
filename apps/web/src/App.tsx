@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { BottomNav } from './components/BottomNav'
 import { Header } from './components/Header'
@@ -8,6 +9,11 @@ import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import StockDetailPage from './pages/StockDetailPage'
 import { useDailyPopularDataSync } from './hooks/useDailyPopularDataSync'
+
+// AI 진단 버전 비교는 개발 서버에서만 여는 내부 도구라 배포 빌드에는 포함하지 않습니다.
+const DiagnosisComparePage = import.meta.env.DEV
+  ? lazy(() => import('./pages/DiagnosisComparePage'))
+  : null
 
 const TabLayout = () => {
   return (
@@ -30,6 +36,16 @@ const App = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/guide" element={<GuidePage />} />
       <Route path="/stocks/:stockCode" element={<StockDetailPage />} />
+      {DiagnosisComparePage ? (
+        <Route
+          path="/dev/diagnosis-compare"
+          element={
+            <Suspense fallback={null}>
+              <DiagnosisComparePage />
+            </Suspense>
+          }
+        />
+      ) : null}
       <Route element={<TabLayout />}>
         <Route path="/home" element={<HomePage />} />
         <Route path="/ai" element={<AiPage />} />
