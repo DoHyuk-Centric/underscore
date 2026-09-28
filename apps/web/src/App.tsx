@@ -1,6 +1,7 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useCallback, useState } from 'react'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { BottomNav } from './components/BottomNav'
+import { Menu } from './components/menu/Menu'
 import { Header } from './components/Header'
 import AiPage from './pages/AiPage'
 import GuidePage from './pages/GuidePage'
@@ -16,13 +17,18 @@ const DiagnosisComparePage = import.meta.env.DEV
   : null
 
 const TabLayout = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const openMenu = useCallback(() => setIsMenuOpen(true), [])
+  const closeMenu = useCallback(() => setIsMenuOpen(false), [])
+
   return (
     <div className="grid grid-rows-[auto_1fr_auto] h-dvh">
-      <Header />
+      <Header isMenuOpen={isMenuOpen} onMenuOpen={openMenu} />
       <div className="h-full min-h-0 overflow-y-auto overflow-x-hidden scrollbar-gutter-stable">
         <Outlet />
       </div>
       <BottomNav />
+      <Menu open={isMenuOpen} onClose={closeMenu} />
     </div>
   )
 }

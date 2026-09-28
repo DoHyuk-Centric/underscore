@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@theme {
+  /* TDS 터치 효과와 같은 스프링(stiffness 800, damping 55)을 샘플링한 곡선 */
+  --ease-spring: linear(0, 0.08 5%, 0.24 10%, 0.408 15%, 0.557 20%, 0.769 30%, 0.887 40%, 0.947 50%, 0.976 60%, 0.993 75%, 1);
+}
+
 html,
 body,
 #root {
