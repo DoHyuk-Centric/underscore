@@ -1,7 +1,7 @@
 import { lazy, Suspense, useCallback, useState } from 'react'
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { BottomNav } from './components/BottomNav'
-import { FullscreenNavigationMenu } from './components/FullscreenNavigationMenu'
+import { Menu } from './components/menu/Menu'
 import { Header } from './components/Header'
 import AiPage from './pages/AiPage'
 import GuidePage from './pages/GuidePage'
@@ -28,7 +28,7 @@ const TabLayout = () => {
         <Outlet />
       </div>
       <BottomNav />
-      <FullscreenNavigationMenu open={isMenuOpen} onClose={closeMenu} />
+      <Menu open={isMenuOpen} onClose={closeMenu} />
     </div>
   )
 }
