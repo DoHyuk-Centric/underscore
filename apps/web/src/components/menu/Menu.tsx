@@ -12,9 +12,21 @@ interface MenuProps {
   plan?: Plan
   records?: AnalysisRecord[]
   isRecordsLoading?: boolean
+  isRecordsError?: boolean
+  onRetryRecords?: () => void
 }
 
-export function Menu({ open, onClose, plan = 'free', records = [], isRecordsLoading = false }: MenuProps) {
+const noop = () => {}
+
+export function Menu({
+  open,
+  onClose,
+  plan = 'free',
+  records = [],
+  isRecordsLoading = false,
+  isRecordsError = false,
+  onRetryRecords = noop,
+}: MenuProps) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -55,7 +67,14 @@ export function Menu({ open, onClose, plan = 'free', records = [], isRecordsLoad
       onCancel={(event) => { event.preventDefault(); onClose() }}
     >
       <MenuHeader closeButtonRef={closeButtonRef} onClose={onClose} />
-      <MenuMain plan={plan} records={records} isRecordsLoading={isRecordsLoading} onClose={onClose} />
+      <MenuMain
+        plan={plan}
+        records={records}
+        isRecordsLoading={isRecordsLoading}
+        isRecordsError={isRecordsError}
+        onRetryRecords={onRetryRecords}
+        onClose={onClose}
+      />
       <MenuFooter />
     </dialog>,
     document.body,
