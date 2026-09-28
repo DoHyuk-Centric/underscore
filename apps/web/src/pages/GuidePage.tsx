@@ -1,4 +1,4 @@
-function GuidePage() {
+const GuidePage = () => {
   return (
     <main className="min-h-dvh p-6 bg-[#f7f8fa]">
       <section>

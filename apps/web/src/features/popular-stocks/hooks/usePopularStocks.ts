@@ -1,33 +1,22 @@
-import { useCallback, useEffect, useState } from 'react'
-import { getPopularStocks } from '../api/popular-api'
-import type { PopularStock } from '@underscore/shared'
+import { useQuery } from "@tanstack/react-query";
+import { getPopularStocks } from "../api/popular-stock-api";
+import { getNextKstRefreshTimestamp } from "../../../lib/kst-refresh";
 
-export function usePopularStocks() {
-  const [stocks, setStocks] = useState<PopularStock[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<unknown>(null)
-  const [retryCount, setRetryCount] = useState(0)
+export const usePopularStocks = () => {
+  const {
+    data: stocks = [],
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["popular-stocks"],
+    queryFn: ({ signal }) => getPopularStocks(signal),
+    staleTime: (query) => {
+      const fetchedAt = query.state.dataUpdatedAt;
+      if (!fetchedAt) return 0;
+      return getNextKstRefreshTimestamp(fetchedAt) - fetchedAt;
+    },
+  });
 
-  const retry = useCallback(() => {
-    setError(null)
-    setIsLoading(true)
-    setRetryCount((count) => count + 1)
-  }, [])
-
-  useEffect(() => {
-    const controller = new AbortController()
-
-    getPopularStocks(controller.signal)
-      .then(setStocks)
-      .catch((requestError) => {
-        if (!controller.signal.aborted) setError(requestError)
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setIsLoading(false)
-      })
-
-    return () => controller.abort()
-  }, [retryCount])
-
-  return { stocks, isLoading, error, retry }
-}
+  return { stocks, isLoading, error, refetch };
+};

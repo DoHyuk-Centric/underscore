@@ -4,7 +4,7 @@ import LoginActions from '../features/auth/components/LoginActions'
 import LoginBackground from '../features/auth/components/LoginBackground'
 import LoginLogo from '../features/auth/components/LoginLogo'
 
-function LoginPage() {
+const LoginPage = () => {
   const navigate = useNavigate()
   const [loginReady, setLoginReady] = useState(() =>
     typeof window !== 'undefined' &&

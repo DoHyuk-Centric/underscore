@@ -8,7 +8,7 @@ interface LoginActionsProps {
   onLogin: () => void
 }
 
-function LoginActions({ ready, onLogin }: LoginActionsProps) {
+const LoginActions = ({ ready, onLogin }: LoginActionsProps) => {
   return (
     <div
       className={`absolute inset-x-0 bottom-16 z-10 grid w-full gap-2 px-6 ${ready ? 'login-actions-ready' : 'login-actions-pending'}`}

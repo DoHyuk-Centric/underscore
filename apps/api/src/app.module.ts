@@ -5,6 +5,9 @@ import { AppService } from './app.service.js';
 import { StockSearchModule } from './stock-search/stock-search.module.js';
 import { PopularStocksModule } from './popular-stocks/popular-stocks.module.js';
 import { PopularSectorsModule } from './popular-sectors/popular-sectors.module.js';
+import { MarketDataEventsModule } from './market-data-events/market-data-events.module.js';
+import { DrizzleModule } from './db/drizzle.module.js';
+import { StockDiagnosisModule } from './stock-diagnosis/stock-diagnosis.module.js';
 
 @Module({
   imports: [
@@ -12,9 +15,12 @@ import { PopularSectorsModule } from './popular-sectors/popular-sectors.module.j
       isGlobal: true,
       envFilePath: ['apps/api/.env', '.env'],
     }),
+    DrizzleModule,
+    MarketDataEventsModule,
     StockSearchModule,
     PopularStocksModule,
     PopularSectorsModule,
+    StockDiagnosisModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,24 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import type { PopularStock } from '@underscore/shared';
 
+export interface PopularStockSnapshot {
+  checkedDate: string;
+  baseDate: string;
+  stocks: PopularStock[];
+}
+
 @Injectable()
 export class PopularStockCache {
-  private baseDate = '';
-  private stocks: PopularStock[] = [];
+  private snapshot: PopularStockSnapshot | null = null;
 
-  get(baseDate: string): PopularStock[] | null {
-    return this.baseDate === baseDate && this.stocks.length > 0
-      ? this.stocks
-      : null;
+  get(checkedDate: string): PopularStockSnapshot | null {
+    return this.snapshot?.checkedDate === checkedDate ? this.snapshot : null;
   }
 
-  set(baseDate: string, stocks: PopularStock[]): void {
-    this.baseDate = baseDate;
-    this.stocks = stocks;
+  getLatest(): PopularStockSnapshot | null {
+    return this.snapshot;
   }
 
-  clear(): void {
-    this.baseDate = '';
-    this.stocks = [];
+  set(snapshot: PopularStockSnapshot): void {
+    this.snapshot = snapshot;
   }
 }
