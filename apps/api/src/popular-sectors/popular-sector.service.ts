@@ -10,7 +10,10 @@ import { loadLatestTradingItems } from '../common/market-data/load-latest-tradin
 import { MarketDataEventsService } from '../market-data-events/market-data-events.service.js';
 import { KrxTradingClient } from '../popular-stocks/clients/krx-trading.client.js';
 import { rankSurgingStocks } from '../popular-stocks/popular-stock.ranker.js';
-import { PopularSectorCache } from './popular-sector.cache.js';
+import {
+  PopularSectorCache,
+  type PopularSectorSnapshot,
+} from './popular-sector.cache.js';
 
 @Injectable()
 export class PopularSectorService {
@@ -30,6 +33,17 @@ export class PopularSectorService {
     if (cached) return cached.stocks;
 
     return this.refresh();
+  }
+
+  async getPopularSectorSnapshot(): Promise<PopularSectorSnapshot> {
+    await this.getPopularSectors();
+    const snapshot = this.popularSectorCache.getLatest();
+
+    if (!snapshot) {
+      throw new ServiceUnavailableException('급등 종목 데이터가 없습니다.');
+    }
+
+    return snapshot;
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_2PM, {

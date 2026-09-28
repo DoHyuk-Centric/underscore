@@ -9,5 +9,6 @@ import { PopularSectorCache } from './popular-sector.cache.js';
   imports: [MarketDataEventsModule],
   controllers: [PopularSectorsController],
   providers: [PopularSectorService, PopularSectorCache, KrxTradingClient],
+  exports: [PopularSectorService],
 })
 export class PopularSectorsModule {}
