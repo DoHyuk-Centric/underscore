@@ -6,12 +6,11 @@ import {
 import { Cron, CronExpression } from '@nestjs/schedule';
 import type { PopularStock } from '@underscore/shared';
 import { getYesterdayKstBasDt } from '../common/utils/kst-date.util.js';
+import { loadLatestTradingItems } from '../common/market-data/load-latest-trading-items.js';
 import { MarketDataEventsService } from '../market-data-events/market-data-events.service.js';
 import { KrxTradingClient } from './clients/krx-trading.client.js';
 import { PopularStockCache } from './popular-stock.cache.js';
 import { rankPopularStocks } from './popular-stock.ranker.js';
-
-const MAX_LOOKBACK_DAYS = 10;
 
 @Injectable()
 export class PopularStockService {
@@ -61,55 +60,34 @@ export class PopularStockService {
   private async loadLatestStocks(): Promise<PopularStock[]> {
     const checkedDate = getYesterdayKstBasDt();
 
-    // 날짜 이동 계산에는 UTC를 사용해 실행 환경의 시간대 영향을 줄입니다.
-    const date = new Date(
-      `${checkedDate.slice(0, 4)}-${checkedDate.slice(4, 6)}-${checkedDate.slice(6, 8)}T00:00:00Z`,
-    );
-
     try {
-      for (let offset = 0; offset < MAX_LOOKBACK_DAYS; offset++) {
-        const baseDate = date
-          .toISOString()
-          .slice(0, 10)
-          .replaceAll('-', '');
+      const latest = await loadLatestTradingItems(this.krxTradingClient);
 
-        const day = date.getUTCDay();
-        date.setUTCDate(date.getUTCDate() - 1);
-
-        if (day === 0 || day === 6) continue;
-
-        const items =
-          await this.krxTradingClient.fetchAllDailyTrade(baseDate);
-
-        // 정상 응답이지만 데이터가 없으면 이전 날짜로 이동합니다.
-        if (items.length === 0) continue;
-
-        const stocks = rankPopularStocks(items);
-
-        // 원본이 있는데 모두 제외됐다면 휴장일로 취급하지 않습니다.
-        if (stocks.length === 0) {
-          throw new Error(
-            `인기 종목 필터링 결과가 없습니다. 기준일=${baseDate}, 원본=${items.length}건`,
-          );
-        }
-
-        this.popularStockCache.set({
-          checkedDate,
-          baseDate,
-          stocks,
-        });
-        this.marketDataEvents.emit('stocks');
-
-        this.logger.log(
-          `인기 종목 ${stocks.length}건 캐싱 완료 (${baseDate})`,
-        );
-
-        return stocks;
+      if (!latest) {
+        throw new Error('최근 거래 데이터가 없습니다.');
       }
 
-      throw new Error(
-        `최근 ${MAX_LOOKBACK_DAYS}일 내 거래 데이터가 없습니다.`,
+      const stocks = rankPopularStocks(latest.items);
+
+      // 원본이 있는데 모두 제외됐다면 휴장일로 취급하지 않습니다.
+      if (stocks.length === 0) {
+        throw new Error(
+          `인기 종목 필터링 결과가 없습니다. 기준일=${latest.baseDate}, 원본=${latest.items.length}건`,
+        );
+      }
+
+      this.popularStockCache.set({
+        checkedDate,
+        baseDate: latest.baseDate,
+        stocks,
+      });
+      this.marketDataEvents.emit('stocks');
+
+      this.logger.log(
+        `인기 종목 ${stocks.length}건 캐싱 완료 (${latest.baseDate})`,
       );
+
+      return stocks;
     } catch (error) {
       this.logger.error(
         '인기 종목 갱신 실패',

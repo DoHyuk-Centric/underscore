@@ -9,6 +9,7 @@ export type KrxTradingItem = {
   FLUC_RT?: string;
   ACC_TRDVOL?: string;
   ACC_TRDVAL?: string;
+  MKTCAP?: string;
 };
 
 function toNumber(value?: string): number {

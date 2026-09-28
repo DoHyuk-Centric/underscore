@@ -2,7 +2,7 @@ import { SearchEmptyState } from './SearchEmptyState'
 
 const SUPPORT_EMAIL = 'clzlsdlwhgdk12@gmail.com'
 
-export function SearchErrorState() {
+export const SearchErrorState = () => {
   return (
     <SearchEmptyState icon="!" title="문제가 발생했습니다.">
       <p className="mt-8 text-[#8b95a1] text-xs text-center">

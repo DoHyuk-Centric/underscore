@@ -16,7 +16,7 @@ export class KrxTradingClient {
     const response = await axios.get(`${KRX_API_BASE_URL}/${endpoint}`, {
       params: { basDd: baseDate },
       headers: { AUTH_KEY: process.env.KRX_OPEN_API_KEY ?? '' },
-      timeout: 5_000,
+      timeout: 15_000,
     });
 
     const items: unknown = response.data?.OutBlock_1;

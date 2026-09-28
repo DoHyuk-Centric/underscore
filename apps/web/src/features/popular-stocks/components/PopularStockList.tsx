@@ -1,7 +1,8 @@
 import type { PopularStock } from "@underscore/shared";
-import { ListError } from "../../../components/ListError";
 import { PopularList } from "../../../components/PopularList";
+import { PopularListError } from "../../../components/PopularListError";
 import { PopularListSkeleton } from "../../../components/PopularListSkeleton";
+import { getChangeRatePresentation } from "../../../lib/change-rate-presentation";
 
 type Props = {
   expanded: boolean;
@@ -11,26 +12,30 @@ type Props = {
   refetch: () => void;
 };
 
-export function PopularStockList({
+export const PopularStockList = ({
   expanded,
   stocks,
   isLoading,
   error,
   refetch,
-}: Props) {
-  if (error) {
+}: Props) => {
+  const hasStocks = stocks.length > 0;
+
+  if (error && !hasStocks) {
     return (
-      <ListError message={"인기 종목을 불러오지 못했어요."} onRetry={refetch} />
+      <PopularListError
+        message="인기 종목을 불러오지 못했어요."
+        onRetry={refetch}
+      />
     );
   }
 
-  if (isLoading) {
+  if (isLoading && !hasStocks) {
     return <PopularListSkeleton />;
   }
 
   const items = stocks.map((stock) => {
-    const color = stock.changeRate >= 0 ? "text-[#f04452]" : "text-[#3182f6]";
-    const changeText = `${stock.changeRate >= 0 ? "+" : ""}${stock.changeRate.toFixed(2)}%`;
+    const change = getChangeRatePresentation(stock.changeRate);
 
     return {
       key: stock.stockCode,
@@ -42,11 +47,11 @@ export function PopularStockList({
           <strong className="text-[15px] text-[#191f28]">
             {stock.price.toLocaleString()}원
           </strong>
-          <small className={`text-xs ${color}`}>{changeText}</small>
+          <small className={`text-xs ${change.className}`}>{change.text}</small>
         </span>
       ),
     };
   });
 
   return <PopularList items={items} expanded={expanded} />;
-}
+};

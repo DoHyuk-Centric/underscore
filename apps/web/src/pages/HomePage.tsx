@@ -5,24 +5,28 @@ import { useStockSearch } from '../features/stock-search/hooks/useStockSearch'
 import { PopularStocks } from '../features/popular-stocks/components/PopularStocks'
 import { KakaoContact } from '../features/contact/components/KakaoContact'
 
-function HomePage() {
+const HomePage = () => {
   const [query, setQuery] = useState('')
   const searchState = useStockSearch(query)
   const isSearching = Boolean(query.trim())
+  let mainClassName = 'flex min-h-full flex-col bg-[#f7f8fa] px-2 pb-6'
+  if (isSearching) {
+    mainClassName = 'flex h-full min-h-0 flex-col bg-[#f7f8fa] px-2 pb-6'
+  }
 
   return (
-    <main className="flex min-h-full flex-col px-2 pb-6 bg-[#f7f8fa]">
-      <section className="mt-3 rounded-[20px] bg-white px-3 py-1">
+    <main className={mainClassName}>
+      <section
+        className={`mt-3 rounded-[20px] bg-white px-3 py-1 ${
+          isSearching ? 'flex min-h-0 flex-1 flex-col' : ''
+        }`}
+      >
         <StockSearchBar
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           onDeleteClick={() => setQuery('')}
         />
-        {isSearching ? (
-          <StockSearchResults query={query} {...searchState} />
-        ) : (
-          <PopularStocks />
-        )}
+        {isSearching ? <StockSearchResults query={query} {...searchState} /> : <PopularStocks />}
       </section>
       {!isSearching && (
         <div className="flex w-full shrink-0 justify-end">
@@ -34,3 +38,4 @@ function HomePage() {
 }
 
 export default HomePage
+

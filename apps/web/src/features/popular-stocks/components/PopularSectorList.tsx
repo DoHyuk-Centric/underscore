@@ -1,55 +1,76 @@
-import type { PopularSector } from "@underscore/shared";
-import { ListError } from "../../../components/ListError";
+import { useNavigate } from "react-router-dom";
+import type { PopularStock } from "@underscore/shared";
 import { PopularList } from "../../../components/PopularList";
+import { PopularListError } from "../../../components/PopularListError";
 import { PopularListSkeleton } from "../../../components/PopularListSkeleton";
+import { getChangeRatePresentation } from "../../../lib/change-rate-presentation";
 
 type Props = {
   expanded: boolean;
-  sectors: PopularSector[];
+  stocks: PopularStock[];
   isLoading: boolean;
   error: unknown;
   refetch: () => void;
 };
 
-function formatTradingValue(value: number): string {
-  const 조 = 1_000_000_000_000;
-  const 억 = 100_000_000;
-
-  if (value >= 조) {
-    return `${(value / 조).toFixed(1)}조원`;
-  }
-  return `${Math.round(value / 억).toLocaleString()}억원`;
-}
-
-export function PopularSectorList({
+export const PopularSectorList = ({
   expanded,
-  sectors,
+  stocks,
   isLoading,
   error,
   refetch,
-}: Props) {
-  if (error) {
+}: Props) => {
+  const navigate = useNavigate();
+  const hasStocks = stocks.length > 0;
+
+  if (error && !hasStocks) {
     return (
-      <ListError message="인기 섹터를 불러오지 못했어요." onRetry={refetch} />
+      <PopularListError
+        message="급등 종목을 불러오지 못했어요."
+        onRetry={refetch}
+      />
     );
   }
 
-  if (isLoading) {
+  if (isLoading && !hasStocks) {
     return <PopularListSkeleton />;
   }
 
-  const items = sectors.map((sector) => {
-    const color = sector.changeRate >= 0 ? "text-[#f04452]" : "text-[#3182f6]";
-    const changeText = `${sector.changeRate >= 0 ? "+" : ""}${sector.changeRate.toFixed(2)}%`;
+  const items = stocks.map((stock) => {
+    const change = getChangeRatePresentation(stock.changeRate);
 
     return {
-      key: sector.name,
-      rank: sector.rank,
-      name: sector.name,
-      detail: formatTradingValue(sector.tradingValue),
-      right: <strong className={`text-[15px] ${color}`}>{changeText}</strong>,
+      key: stock.stockCode,
+      rank: stock.rank,
+      name: stock.name,
+      detail: `${stock.market} · ${stock.stockCode}`,
+      right: (
+        <span className="grid gap-1 text-right">
+          <strong className="text-[15px] text-[#191f28]">
+            {stock.price.toLocaleString()}원
+          </strong>
+          <small className={`text-xs ${change.className}`}>{change.text}</small>
+        </span>
+      ),
     };
   });
 
-  return <PopularList items={items} expanded={expanded} />;
-}
+  const goToDetail = (stockCode: string) => {
+    const stock = stocks.find((item) => item.stockCode === stockCode);
+    if (!stock) return;
+
+    navigate(`/stocks/${stock.stockCode}`, {
+      state: {
+        name: stock.name,
+        market: stock.market,
+        price: stock.price,
+        change: stock.change,
+        changeRate: stock.changeRate,
+        volume: stock.volume,
+        tradingValue: stock.tradingValue,
+      },
+    });
+  };
+
+  return <PopularList items={items} expanded={expanded} onSelect={goToDetail} />;
+};

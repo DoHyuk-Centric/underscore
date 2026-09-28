@@ -6,7 +6,7 @@ type SearchEmptyStateProps = {
   children?: ReactNode
 }
 
-export function SearchEmptyState({ icon, title, children }: SearchEmptyStateProps) {
+export const SearchEmptyState = ({ icon, title, children }: SearchEmptyStateProps) => {
   return (
     <div className="flex-1 flex flex-col items-center justify-center gap-2 text-center -translate-y-8">
       <span className="text-[#eef0f2] text-[120px] font-bold leading-none" aria-hidden="true">

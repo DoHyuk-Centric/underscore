@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import type { PopularSector } from '@underscore/shared';
+import type { PopularStock } from '@underscore/shared';
 
 export interface PopularSectorSnapshot {
   checkedDate: string;
   baseDate: string;
-  sectors: PopularSector[];
+  stocks: PopularStock[];
 }
 
 @Injectable()

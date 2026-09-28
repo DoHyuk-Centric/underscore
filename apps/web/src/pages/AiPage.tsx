@@ -1,4 +1,4 @@
-function AiPage() {
+const AiPage = () => {
   return (
     <main className="min-h-full py-6 px-3 bg-[#f7f8fa]">
       <h1 className="m-0 mb-2 text-[#191f28] text-[22px] font-extrabold">AI 분석</h1>

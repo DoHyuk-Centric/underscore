@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getPopularStocks } from "../api/popular-stock-api";
 import { getNextKstRefreshTimestamp } from "../../../lib/kst-refresh";
 
-export function usePopularStocks() {
+export const usePopularStocks = () => {
   const {
     data: stocks = [],
     isLoading,
@@ -19,4 +19,4 @@ export function usePopularStocks() {
   });
 
   return { stocks, isLoading, error, refetch };
-}
+};

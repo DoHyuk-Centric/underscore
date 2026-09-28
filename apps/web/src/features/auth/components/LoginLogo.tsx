@@ -2,7 +2,7 @@ interface LoginLogoProps {
   onReady: () => void
 }
 
-function LoginLogo({ onReady }: LoginLogoProps) {
+const LoginLogo = ({ onReady }: LoginLogoProps) => {
   return (
     <div className="absolute top-1/2 left-1/2 z-10 animate-[logo-rise_0.5s_ease-in-out_1s_both]">
       <div className="relative inline-block pt-7 text-4xl font-extrabold text-[#191f28]">

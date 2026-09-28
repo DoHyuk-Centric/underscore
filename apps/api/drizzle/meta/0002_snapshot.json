@@ -1,0 +1,113 @@
+{
+  "id": "7764f7fd-afe7-4574-97b5-daa19f1e34f8",
+  "prevId": "f4da4e5f-22e3-4f3b-b52c-0674e8fb458c",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.stock_diagnosis": {
+      "name": "stock_diagnosis",
+      "schema": "",
+      "columns": {
+        "stock_code": {
+          "name": "stock_code",
+          "type": "varchar(12)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "base_date": {
+          "name": "base_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stock_name": {
+          "name": "stock_name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rank": {
+          "name": "rank",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "headline": {
+          "name": "headline",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "company_intro": {
+          "name": "company_intro",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "impact_context": {
+          "name": "impact_context",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "market_context": {
+          "name": "market_context",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "news": {
+          "name": "news",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "caution": {
+          "name": "caution",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "model": {
+          "name": "model",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "stock_diagnosis_stock_code_base_date_pk": {
+          "name": "stock_diagnosis_stock_code_base_date_pk",
+          "columns": [
+            "stock_code",
+            "base_date"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

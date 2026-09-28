@@ -1,12 +1,12 @@
-import { popularSectorSchema, type PopularSector } from "@underscore/shared";
+import { popularStockSchema, type PopularStock } from "@underscore/shared";
 import { http } from "../../../lib/http";
 
 export async function getPopularSectors(
   signal?: AbortSignal,
-): Promise<PopularSector[]> {
+): Promise<PopularStock[]> {
   const response = await http.get("/market-data/popular/sectors", {
     signal,
   });
 
-  return popularSectorSchema.array().parse(response.data);
+  return popularStockSchema.array().parse(response.data);
 }

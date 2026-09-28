@@ -15,9 +15,10 @@ export type PopularListItem = {
 type Props = {
   items: PopularListItem[];
   expanded: boolean;
+  onSelect?: (key: string) => void;
 };
 
-export function PopularList({ items, expanded }: Props) {
+export const PopularList = ({ items, expanded, onSelect }: Props) => {
   return (
     <ol className="m-0 list-none p-0">
       {items.map((item, index) => {
@@ -35,6 +36,7 @@ export function PopularList({ items, expanded }: Props) {
                 className={index > 0 ? "border-t border-[#f0f1f3]" : undefined}
               >
                 <ListRow
+                  style={{ minHeight: "var(--popular-list-row-height, 80px)" }}
                   left={
                     <span className="inline-block w-5 text-center text-[15px] font-bold text-[#6b7684]">
                       {item.rank}
@@ -55,6 +57,7 @@ export function PopularList({ items, expanded }: Props) {
                   horizontalPadding="small"
                   verticalPadding="medium"
                   withTouchEffect
+                  onClick={onSelect ? () => onSelect(item.key) : undefined}
                 />
               </div>
             </div>
@@ -63,4 +66,4 @@ export function PopularList({ items, expanded }: Props) {
       })}
     </ol>
   );
-}
+};
