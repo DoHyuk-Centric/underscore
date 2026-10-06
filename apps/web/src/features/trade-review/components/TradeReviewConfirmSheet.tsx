@@ -49,6 +49,11 @@ export const TradeReviewConfirmSheet = ({
       }
     >
       {request && <TradeReviewSummary stock={stock} request={request} />}
+      {isRequesting && (
+        <p role="status" className="m-0 mt-3 px-7 text-[13px] leading-5 break-keep text-[#3182f6]">
+          보유 기간의 공시를 모아 거래를 복기하고 있어요. 30초 정도 걸릴 수 있어요.
+        </p>
+      )}
       {errorMessage && (
         <p role="alert" className="m-0 mt-3 px-7 text-[13px] leading-5 break-keep text-[#f04452]">
           {errorMessage}
