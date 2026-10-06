@@ -6,5 +6,6 @@ import { DailyPriceService } from './daily-price.service.js';
 @Module({
   controllers: [DailyPriceController],
   providers: [DailyPriceService, KrxTradingClient],
+  exports: [DailyPriceService],
 })
 export class DailyPriceModule {}

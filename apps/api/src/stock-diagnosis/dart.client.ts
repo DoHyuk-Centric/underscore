@@ -191,15 +191,25 @@ export class DartClient {
         Date.now(),
       ),
     );
+    return this.getDisclosuresBetween(corpCode, toDartDate(begin), toDartDate(end));
+  }
+
+  /** 기간(YYYYMMDD~YYYYMMDD)에 접수된 공시 원문 발췌. 최근 공시부터 limit건까지 가져옵니다. */
+  async getDisclosuresBetween(
+    corpCode: string,
+    beginDate: string,
+    endDate: string,
+    { limit = MAX_DISCLOSURES, excerptLength = DISCLOSURE_EXCERPT_LENGTH } = {},
+  ): Promise<DartDisclosure[]> {
     const items = (
       await this.listDisclosures({
         corp_code: corpCode,
-        bgn_de: toDartDate(begin),
-        end_de: toDartDate(end),
+        bgn_de: beginDate,
+        end_de: endDate,
       })
     )
       .filter((item) => !NOISE_REPORT_PATTERN.test(item.report_nm))
-      .slice(0, MAX_DISCLOSURES);
+      .slice(0, limit);
 
     const disclosures: DartDisclosure[] = [];
 
@@ -211,7 +221,7 @@ export class DartClient {
         title: item.report_nm.trim(),
         receivedDate: formatDartDate(item.rcept_dt),
         url: `${DART_VIEWER_URL}?rcpNo=${item.rcept_no}`,
-        excerpt: text.replace(/\n+/g, ' ').slice(0, DISCLOSURE_EXCERPT_LENGTH),
+        excerpt: text.replace(/\n+/g, ' ').slice(0, excerptLength),
       });
     }
 

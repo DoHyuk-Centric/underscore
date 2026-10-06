@@ -31,6 +31,7 @@ export class DailyPriceService {
 
     return {
       stockCode,
+      name: item.ISU_NM ?? '',
       date,
       open: toNumber(item.TDD_OPNPRC),
       high: toNumber(item.TDD_HGPRC),
