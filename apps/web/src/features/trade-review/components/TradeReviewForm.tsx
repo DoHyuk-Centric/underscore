@@ -1,35 +1,29 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import type { TradeReviewRequest } from '@underscore/shared'
-import { http } from '../../../lib/http'
 import { TradeReviewProvider } from '../context/TradeReviewProvider'
+import { useRequestTradeReview } from '../hooks/useRequestTradeReview'
 import { BuySection, SellSection, StockSection } from './sections'
 import { TradeReviewConfirmSheet } from './TradeReviewConfirmSheet'
 
 export const TradeReviewForm = () => {
   const [pendingRequest, setPendingRequest] = useState<TradeReviewRequest | null>(null)
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
-  const [reviewError, setReviewError] = useState<string | null>(null)
-  const isRequesting = useRef(false)
+  const reviewRequest = useRequestTradeReview()
 
   const openConfirm = (request: TradeReviewRequest) => {
     setPendingRequest(request)
     setIsConfirmOpen(true)
   }
 
-  const requestReview = async () => {
-    if (!pendingRequest || isRequesting.current) return
+  // 다시 열었을 때 지난 실패 문구가 남지 않도록 요청 상태도 함께 초기화합니다.
+  const closeConfirm = () => {
+    setIsConfirmOpen(false)
+    reviewRequest.reset()
+  }
 
-    isRequesting.current = true
-    setReviewError(null)
-
-    try {
-      await http.post('/trade-review', pendingRequest, { timeout: 60000 })
-      setIsConfirmOpen(false)
-    } catch {
-      setReviewError('AI 분석을 요청하지 못했어요. 잠시 후 다시 시도해주세요.')
-    } finally {
-      isRequesting.current = false
-    }
+  const requestReview = () => {
+    if (!pendingRequest || reviewRequest.isPending) return
+    reviewRequest.mutate(pendingRequest, { onSuccess: () => setIsConfirmOpen(false) })
   }
 
   return (
@@ -37,11 +31,12 @@ export const TradeReviewForm = () => {
       <StockSection />
       <BuySection />
       <SellSection />
-      {reviewError && <p role="alert">{reviewError}</p>}
       <TradeReviewConfirmSheet
         open={isConfirmOpen}
         request={pendingRequest}
-        onClose={() => setIsConfirmOpen(false)}
+        isRequesting={reviewRequest.isPending}
+        errorMessage={reviewRequest.isError ? 'AI 분석을 요청하지 못했어요. 잠시 후 다시 시도해주세요.' : undefined}
+        onClose={closeConfirm}
         onConfirm={requestReview}
       />
     </TradeReviewProvider>

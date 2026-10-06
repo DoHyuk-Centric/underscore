@@ -9,11 +9,20 @@ import { averagePrice, describeEntries } from '../trade-review-form'
 type TradeReviewConfirmSheetProps = {
   open: boolean
   request: TradeReviewRequest | null
+  isRequesting: boolean
+  errorMessage?: string
   onClose: () => void
   onConfirm: () => void
 }
 
-export const TradeReviewConfirmSheet = ({ open, request, onClose, onConfirm }: TradeReviewConfirmSheetProps) => {
+export const TradeReviewConfirmSheet = ({
+  open,
+  request,
+  isRequesting,
+  errorMessage,
+  onClose,
+  onConfirm,
+}: TradeReviewConfirmSheetProps) => {
   const { stock } = useTradeReview()
 
   return (
@@ -32,7 +41,7 @@ export const TradeReviewConfirmSheet = ({ open, request, onClose, onConfirm }: T
             </Button>
           }
           rightButton={
-            <Button type="button" onClick={onConfirm}>
+            <Button type="button" loading={isRequesting} onClick={onConfirm}>
               AI 분석 받기
             </Button>
           }
@@ -40,6 +49,11 @@ export const TradeReviewConfirmSheet = ({ open, request, onClose, onConfirm }: T
       }
     >
       {request && <TradeReviewSummary stock={stock} request={request} />}
+      {errorMessage && (
+        <p role="alert" className="m-0 mt-3 px-7 text-[13px] leading-5 break-keep text-[#f04452]">
+          {errorMessage}
+        </p>
+      )}
     </BottomSheet>
   )
 }
