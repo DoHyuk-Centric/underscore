@@ -5,6 +5,9 @@ export type KrxTradingItem = {
   ISU_NM?: string;
   MKT_NM?: string;
   TDD_CLSPRC?: string;
+  TDD_OPNPRC?: string;
+  TDD_HGPRC?: string;
+  TDD_LWPRC?: string;
   CMPPREVDD_PRC?: string;
   FLUC_RT?: string;
   ACC_TRDVOL?: string;
@@ -12,7 +15,7 @@ export type KrxTradingItem = {
   MKTCAP?: string;
 };
 
-function toNumber(value?: string): number {
+export function toNumber(value?: string): number {
   return Number(value?.replaceAll(',', '').replaceAll('%', '') ?? 0) || 0;
 }
 
