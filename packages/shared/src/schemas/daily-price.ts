@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const dailyPriceSchema = z.object({
   stockCode: z.string().min(1),
+  name: z.string(),
   date: z.string().length(8),
   open: z.number(),
   high: z.number(),
