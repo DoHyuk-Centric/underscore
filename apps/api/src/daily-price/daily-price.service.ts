@@ -38,6 +38,7 @@ export class DailyPriceService {
       low: toNumber(item.TDD_LWPRC),
       close: toNumber(item.TDD_CLSPRC),
       volume,
+      tradingValue: toNumber(item.ACC_TRDVAL),
     };
   }
 

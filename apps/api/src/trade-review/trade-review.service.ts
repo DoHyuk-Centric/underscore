@@ -67,25 +67,36 @@ export class TradeReviewService {
 
   /** 화면에서 한 검증을 서버에서 다시 합니다. 화면을 거치지 않은 요청도 그날 시세로 가능한 거래만 받습니다. */
   private async verifyWithDailyPrices(request: TradeReviewRequest): Promise<DailyPrice[]> {
-    const entries = [...request.buys, ...request.sells];
-    const dates = [...new Set(entries.map((entry) => entry.date))].sort();
+    const dates = [...new Set([...request.buys, ...request.sells].map((entry) => entry.date))].sort();
+    const pricesByDate = await this.loadDailyPrices(request.stockCode, dates);
 
+    // 같은 날 분할 건의 합계를 검사하려고 매수와 매도를 각각의 목록으로 넘깁니다.
+    this.rejectImpossibleEntries(request.buys, pricesByDate);
+    this.rejectImpossibleEntries(request.sells, pricesByDate);
+
+    return dates.map((date) => pricesByDate.get(date)!);
+  }
+
+  private async loadDailyPrices(stockCode: string, dates: string[]): Promise<Map<string, DailyPrice>> {
     const pricesByDate = new Map<string, DailyPrice>();
+
     for (const date of dates) {
       try {
-        pricesByDate.set(date, await this.dailyPriceService.getDailyPrice(request.stockCode, date));
+        pricesByDate.set(date, await this.dailyPriceService.getDailyPrice(stockCode, date));
       } catch (error) {
         const reason = error instanceof HttpException ? error.message : '시세를 확인하지 못했어요.';
         throw new BadRequestException(`${formatDate(date)}: ${reason}`);
       }
     }
 
-    for (const entry of entries) {
-      const [issue] = getTradeEntryPriceIssues(entry, pricesByDate.get(entry.date)!);
-      if (issue) throw new BadRequestException(`${formatDate(entry.date)}: ${issue.message}`);
-    }
+    return pricesByDate;
+  }
 
-    return dates.map((date) => pricesByDate.get(date)!);
+  private rejectImpossibleEntries(entries: TradeEntry[], pricesByDate: Map<string, DailyPrice>): void {
+    entries.forEach((entry, index) => {
+      const [issue] = getTradeEntryPriceIssues(entries, index, pricesByDate.get(entry.date)!);
+      if (issue) throw new BadRequestException(`${formatDate(entry.date)}: ${issue.message}`);
+    });
   }
 
   private calculateMetrics(request: TradeReviewRequest, stockName: string): TradeReviewMetrics {

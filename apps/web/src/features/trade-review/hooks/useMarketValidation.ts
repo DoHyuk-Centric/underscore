@@ -26,7 +26,7 @@ export const useMarketValidation = <Output>(
         return
       }
 
-      for (const issue of getTradeEntryPriceIssues(entries[index], result.value)) {
+      for (const issue of getTradeEntryPriceIssues(entries, index, result.value)) {
         setError(`${side}.${index}.${issue.field}`, { message: issue.message })
         isValid = false
       }

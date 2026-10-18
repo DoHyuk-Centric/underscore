@@ -1,6 +1,6 @@
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import { Plus } from 'lucide-react'
-import { getMaxTradeQuantity, getTradeEntryPriceIssues } from '@underscore/shared'
+import { getTickSize, getTradeEntryPriceIssues } from '@underscore/shared'
 import { useDailyPrice } from '../hooks/useDailyPrice'
 import { fromDateKey, toDateKey } from '../trade-date'
 import {
@@ -75,19 +75,20 @@ type TradeEntryFieldsProps = {
 const TradeEntryFields = ({ side, index, minDate }: TradeEntryFieldsProps) => {
   const { control } = useFormContext<TradeReviewFormValues>()
   const sideLabel = TRADE_SIDE_LABEL[side]
-  const [stockCode, watchedEntry] = useWatch({ control, name: ['stockCode', `${side}.${index}`] })
+  // 같은 날 다른 건과의 합계도 검사하므로 이 건만이 아니라 같은 쪽 목록 전체를 지켜봅니다.
+  const [stockCode, entries] = useWatch({ control, name: ['stockCode', side] })
   // 삭제 직후 한 번은 이미 사라진 index로 렌더될 수 있습니다.
-  const entry = watchedEntry ?? createEmptyEntry()
+  const entry = entries[index] ?? createEmptyEntry()
   const { dailyPrice, error: dailyPriceError, isFetching } = useDailyPrice(stockCode, entry.date)
 
   // 서버 시세와 맞지 않는 값은 "다음"을 누르기 전에도 바로 알려줍니다.
-  const priceIssues = dailyPrice ? getTradeEntryPriceIssues(entry, dailyPrice) : []
+  const priceIssues = dailyPrice && entries[index] ? getTradeEntryPriceIssues(entries, index, dailyPrice) : []
   const issueMessage = (field: 'price' | 'quantity') => priceIssues.find((issue) => issue.field === field)?.message
 
   const dateHelp = isFetching
     ? '이날 시세를 확인하고 있어요.'
     : dailyPrice
-      ? `이날 ${formatNumber(dailyPrice.low)}~${formatNumber(dailyPrice.high)}원 · 종가 ${formatNumber(dailyPrice.close)}원`
+      ? `이날 ${formatNumber(dailyPrice.low)}~${formatNumber(dailyPrice.high)}원 · 종가 ${formatNumber(dailyPrice.close)}원 · ${formatNumber(getTickSize(dailyPrice.close))}원 단위`
       : undefined
 
   return (
@@ -130,7 +131,7 @@ const TradeEntryFields = ({ side, index, minDate }: TradeEntryFieldsProps) => {
           <TradeNumberField
             {...field}
             label={`${sideLabel} 수량`}
-            placeholder={dailyPrice ? `최대 ${formatNumber(getMaxTradeQuantity(dailyPrice))}주` : '몇 주'}
+            placeholder="최소 1주"
             suffix="주"
             errorMessage={fieldState.error?.message ?? issueMessage('quantity')}
           />
