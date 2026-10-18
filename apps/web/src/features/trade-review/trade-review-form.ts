@@ -27,7 +27,11 @@ export const createEmptyEntry = (): TradeEntryFormValues => ({
   reason: '',
 })
 
-export const formatNumber = (value: number) => value.toLocaleString('ko-KR')
+// 날짜·가격·수량·근거를 하나도 적지 않은 건입니다. "분할 추가"만 누르고 비워 둔 경우가 여기에 해당합니다.
+export const isEmptyEntry = (entry: TradeEntryFormValues) =>
+  !entry.date && entry.price === undefined && entry.quantity === undefined && !entry.reason.trim()
+
+export const formatNumber =(value: number) => value.toLocaleString('ko-KR')
 
 export const describeEntries = (entries: TradeEntryFormValues[]) =>
   `${entries.length}건 · ${formatNumber(sumQuantity(entries))}주 · 평균 ${formatNumber(averagePrice(entries) ?? 0)}원`
