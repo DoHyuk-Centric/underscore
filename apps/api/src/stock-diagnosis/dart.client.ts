@@ -194,22 +194,42 @@ export class DartClient {
     return this.getDisclosuresBetween(corpCode, toDartDate(begin), toDartDate(end));
   }
 
-  /** 기간(YYYYMMDD~YYYYMMDD)에 접수된 공시 원문 발췌. 최근 공시부터 limit건까지 가져옵니다. */
+  /**
+   * 기간(YYYYMMDD~YYYYMMDD)에 접수된 공시 원문 발췌. 기본은 최근 공시부터 limit건까지 가져옵니다.
+   * priority를 주면 제목의 중요도(작을수록 먼저)로 limit건을 고른 뒤, 접수일 순서로 돌려줍니다.
+   */
   async getDisclosuresBetween(
     corpCode: string,
     beginDate: string,
     endDate: string,
-    { limit = MAX_DISCLOSURES, excerptLength = DISCLOSURE_EXCERPT_LENGTH } = {},
+    {
+      limit = MAX_DISCLOSURES,
+      excerptLength = DISCLOSURE_EXCERPT_LENGTH,
+      noisePattern = NOISE_REPORT_PATTERN,
+      priority,
+    }: {
+      limit?: number;
+      excerptLength?: number;
+      noisePattern?: RegExp;
+      priority?: (title: string) => number;
+    } = {},
   ): Promise<DartDisclosure[]> {
-    const items = (
+    const candidates = (
       await this.listDisclosures({
         corp_code: corpCode,
         bgn_de: beginDate,
         end_de: endDate,
       })
-    )
-      .filter((item) => !NOISE_REPORT_PATTERN.test(item.report_nm))
-      .slice(0, limit);
+    ).filter((item) => !noisePattern.test(item.report_nm));
+
+    const items = priority
+      ? candidates
+          .map((item, recency) => ({ item, recency, rank: priority(item.report_nm) }))
+          .sort((a, b) => a.rank - b.rank || a.recency - b.recency)
+          .slice(0, limit)
+          .map(({ item }) => item)
+          .sort((a, b) => a.rcept_dt.localeCompare(b.rcept_dt) || a.rcept_no.localeCompare(b.rcept_no))
+      : candidates.slice(0, limit);
 
     const disclosures: DartDisclosure[] = [];
 
