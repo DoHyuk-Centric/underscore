@@ -8,6 +8,8 @@ export const dailyPriceSchema = z.object({
   high: z.number(),
   low: z.number(),
   close: z.number(),
+  /** 전일 종가 대비 등락률(%) */
+  changeRate: z.number(),
   volume: z.number(),
   tradingValue: z.number(),
 });
