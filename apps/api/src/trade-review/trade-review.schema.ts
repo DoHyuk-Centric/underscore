@@ -96,6 +96,11 @@ const FORBIDDEN_PATTERNS = [
   /(오를|내릴|상승할|하락할)\s*(거예요|것입니다|전망)/,
 ];
 
+// 앞으로의 매매 방법을 묻거나 맡기는 표현입니다. 사용자가 근거에 직접 쓴 말일 수 있어 따옴표로 인용한 부분은 빼고 검사합니다.
+const STRATEGY_PATTERNS = [/손절/, /비중\s*(계획|확대|축소|조절|을\s*늘|을\s*줄)/, /대응\s*기준/, /매매\s*규칙/];
+
+const withoutQuotes = (text: string) => text.replace(/"[^"]*"|“[^”]*”|'[^']*'|‘[^’]*’/g, '');
+
 export function findForbiddenPhrase(output: ReviewOutput): string | null {
   const texts = [
     output.summary,
@@ -109,6 +114,10 @@ export function findForbiddenPhrase(output: ReviewOutput): string | null {
   for (const text of texts) {
     for (const pattern of FORBIDDEN_PATTERNS) {
       const match = pattern.exec(text);
+      if (match) return match[0];
+    }
+    for (const pattern of STRATEGY_PATTERNS) {
+      const match = pattern.exec(withoutQuotes(text));
       if (match) return match[0];
     }
   }
