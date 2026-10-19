@@ -214,7 +214,12 @@ export class DartClient {
     const disclosures: DartDisclosure[] = [];
 
     for (const item of items) {
-      const text = await this.getDocumentText(item.rcept_no);
+      // 첨부 정정처럼 본문 파일이 없는 공시가 있어도 나머지 공시는 그대로 씁니다.
+      const text = await this.getDocumentText(item.rcept_no).catch((error: unknown) => {
+        this.logger.warn(`공시 원문을 받지 못해 건너뜁니다 (${item.rcept_no})`, error);
+        return null;
+      });
+      if (text === null) continue;
 
       disclosures.push({
         id: disclosures.length + 1,
