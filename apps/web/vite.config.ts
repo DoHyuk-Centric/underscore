@@ -26,6 +26,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     proxy: {
       '/market-data': 'http://localhost:3000',
+      '/trade-review': 'http://localhost:3000',
     },
   },
 }))

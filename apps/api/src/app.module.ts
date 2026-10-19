@@ -8,6 +8,8 @@ import { PopularSectorsModule } from './popular-sectors/popular-sectors.module.j
 import { MarketDataEventsModule } from './market-data-events/market-data-events.module.js';
 import { DrizzleModule } from './db/drizzle.module.js';
 import { StockDiagnosisModule } from './stock-diagnosis/stock-diagnosis.module.js';
+import { DailyPriceModule } from './daily-price/daily-price.module.js';
+import { TradeReviewModule } from './trade-review/trade-review.module.js';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { StockDiagnosisModule } from './stock-diagnosis/stock-diagnosis.module.j
     PopularStocksModule,
     PopularSectorsModule,
     StockDiagnosisModule,
+    DailyPriceModule,
+    TradeReviewModule,
   ],
   controllers: [AppController],
   providers: [AppService],
