@@ -10,7 +10,7 @@ import { StockDiagnosisService } from './stock-diagnosis.service.js';
   imports: [PopularSectorsModule],
   controllers: [StockDiagnosisController],
   providers: [StockDiagnosisService, NaverNewsClient, GeminiClient, DartClient],
-  // 거래 복기(TradeReviewModule)도 같은 Gemini·DART 연결을 씁니다. DART 고유번호 캐시를 한 번만 받도록 인스턴스를 공유합니다.
-  exports: [GeminiClient, DartClient],
+  // 거래 복기(TradeReviewModule)도 같은 Gemini·DART·뉴스 연결을 씁니다. DART 고유번호 캐시를 한 번만 받도록 인스턴스를 공유합니다.
+  exports: [GeminiClient, DartClient, NaverNewsClient],
 })
 export class StockDiagnosisModule {}
