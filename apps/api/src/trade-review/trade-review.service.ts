@@ -23,8 +23,10 @@ import { comparePrices, type MarketIndexCloses } from './trade-review.comparison
 import { buildReviewPrompt, REVIEW_SYSTEM_PROMPT, type ReviewContext } from './trade-review.prompt.js';
 import {
   findForbiddenPhrase,
+  findStrategyPhrase,
   GEMINI_REVIEW_SCHEMA,
   parseReviewOutput,
+  removeStrategySentences,
   type ReviewOutput,
 } from './trade-review.schema.js';
 
@@ -273,18 +275,40 @@ export class TradeReviewService {
         });
         const output = parseReviewOutput(text);
         const forbidden = findForbiddenPhrase(output);
-
-        if (!forbidden) {
-          this.logger.log(`거래 복기 생성 완료 (${context.metrics.stockCode}, ${model}, ${attempt}회차)`);
-          return output;
+        if (forbidden) {
+          this.logger.warn(`금지 표현 "${forbidden}" 발견, 다시 생성합니다 (${attempt}회차)`);
+          continue;
         }
-        this.logger.warn(`금지 표현 "${forbidden}" 발견, 다시 생성합니다 (${attempt}회차)`);
+
+        const accepted = this.acceptWithoutStrategyPhrase(output, attempt);
+        if (accepted) {
+          this.logger.log(`거래 복기 생성 완료 (${context.metrics.stockCode}, ${model}, ${attempt}회차)`);
+          return accepted;
+        }
       } catch (error) {
         this.logger.warn(`거래 복기 생성 실패 (${attempt}회차)`, error);
       }
     }
 
     throw new ServiceUnavailableException('AI 분석을 만들지 못했어요. 잠시 후 다시 시도해주세요.');
+  }
+
+  /**
+   * 전략 표현이 없으면 그대로 받습니다. 있으면 한 번은 다시 생성해 보고, 마지막 회차에서도 나오면
+   * 그 문장만 지워 답을 살립니다. 권유가 아니라 표현의 문제라서, 오류를 보여주는 것보다 낫습니다.
+   */
+  private acceptWithoutStrategyPhrase(output: ReviewOutput, attempt: number): ReviewOutput | null {
+    const phrase = findStrategyPhrase(output);
+    if (!phrase) return output;
+
+    if (attempt < MAX_GENERATION_ATTEMPTS) {
+      this.logger.warn(`전략 표현 "${phrase}" 발견, 다시 생성합니다 (${attempt}회차)`);
+      return null;
+    }
+
+    const cleaned = removeStrategySentences(output);
+    if (cleaned) this.logger.warn(`전략 표현 "${phrase}"이 든 문장을 지우고 받습니다 (${attempt}회차)`);
+    return cleaned;
   }
 
   // ==================== 정리: AI가 단 출처를 실제 자료와 맞추기 ====================
@@ -320,8 +344,9 @@ export class TradeReviewService {
     const knownIds = new Set(available.map((source) => source.sourceId));
     const keepKnown = (ids: string[]) => ids.filter((id) => knownIds.has(id));
 
+    // 기사는 기자의 해석이라 "확인된 사실"의 출처로 두지 않습니다. 기사만 남는 사실은 확인된 사실이 아니어서 뺍니다.
     const confirmedFacts = output.confirmedFacts
-      .map((fact) => ({ ...fact, sourceIds: keepKnown(fact.sourceIds) }))
+      .map((fact) => ({ ...fact, sourceIds: keepKnown(fact.sourceIds).filter((id) => !id.startsWith('news:')) }))
       .filter((fact) => fact.sourceIds.length > 0);
     const possibleFactors = output.possibleFactors.map((factor) => ({
       ...factor,
