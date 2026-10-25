@@ -4,3 +4,6 @@ dist/
 .env
 .env.local
 *.log
+
+# AI 답변 평가 결과 (CI에서는 아티팩트로 보관)
+apps/api/evals/**/.results/

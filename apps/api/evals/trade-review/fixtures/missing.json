@@ -1,0 +1,64 @@
+{
+  "capturedAt": "2026-10-20",
+  "dailyPrices": {
+    "20260918": {
+      "stockCode": "035420",
+      "name": "NAVER",
+      "date": "20260918",
+      "open": 201500,
+      "high": 202000,
+      "low": 196100,
+      "close": 197700,
+      "changeRate": -0.65,
+      "volume": 1298902,
+      "tradingValue": 256609196800
+    },
+    "20260922": {
+      "stockCode": "035420",
+      "name": "NAVER",
+      "date": "20260922",
+      "open": 201000,
+      "high": 203500,
+      "low": 200000,
+      "close": 201000,
+      "changeRate": 1.57,
+      "volume": 496158,
+      "tradingValue": 100182681500
+    },
+    "20260930": {
+      "stockCode": "035420",
+      "name": "NAVER",
+      "date": "20260930",
+      "open": 194900,
+      "high": 196500,
+      "low": 192800,
+      "close": 193700,
+      "changeRate": -0.56,
+      "volume": 497945,
+      "tradingValue": 96665278100
+    }
+  },
+  "disclosures": [],
+  "marketIndex": {
+    "KRX 300": {
+      "20260918": 4729.8,
+      "20260930": 4704.64
+    }
+  },
+  "news": [
+    {
+      "id": 1,
+      "title": "NAVER 19만7400원, 0.8% 하락…코스피 강세에도 20만원선 아래",
+      "description": "NAVER 주가가 18일 장중 20만원선을 넘어섰다가 상승분을 반납하며 약세를 나타내고 있다. 코스피가 2% 안팎의 강세를 보이고 삼성전자와 SK하이닉스 등 대형 기술주가 상승하고 있지만 NAVER는 상대적으로 부진한...",
+      "url": "https://www.job-post.co.kr/news/articleView.html?idxno=228222",
+      "publishedDate": "2026-09-18"
+    },
+    {
+      "id": 2,
+      "title": "NAVER(네이버) 주가 20만원선 하회…연휴 이후 흐름도 주목",
+      "description": "NAVER(네이버·035420) 주가가 23일 오전 약세를 보이며 20만원선을 밑돌고 있다. 이날 오전 10시 53분 현재 NAVER는 전 거래일 대비 4900원(-2.44%) 내린 19만6100원에 거래되고 있다. 전 거래일 종가인 20만1000원에서...",
+      "url": "https://www.cbci.co.kr/news/articleView.html?idxno=609354",
+      "publishedDate": "2026-09-23"
+    }
+  ]
+}

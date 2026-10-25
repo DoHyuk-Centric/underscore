@@ -13,6 +13,7 @@ type StockSearchResultsProps = {
   stocks: KRXStock[]
   isLoading: boolean
   error: string | null
+  onSelect?: (stock: KRXStock) => void
 }
 
 export const StockSearchResults = ({
@@ -20,6 +21,7 @@ export const StockSearchResults = ({
   stocks,
   isLoading,
   error,
+  onSelect,
 }: StockSearchResultsProps) => {
   const [showSkeleton, setShowSkeleton] = useState(false)
 
@@ -56,20 +58,37 @@ export const StockSearchResults = ({
 
     return (
       <ul className="m-0! mt-2.5! grid min-h-0 flex-1 content-start gap-2 overflow-y-auto p-0 list-none">
-        {stocks.map((stock) => (
-          <li
-            className="flex items-center justify-between py-3.5 px-4 rounded-[14px] bg-white"
-            key={stock.isinCode}
-          >
-            <div>
-              <strong className="block text-[15px]">{stock.name}</strong>
-              <span className="block text-[#8b95a1] text-xs">{stock.stockCode}</span>
-            </div>
-            <div className="grid gap-0.75 text-right text-[#8b95a1] text-xs">
-              <span>{stock.market}</span>
-            </div>
-          </li>
-        ))}
+        {stocks.map((stock) => {
+          const itemContent = (
+            <>
+              <div>
+                <strong className="block text-[15px]">{stock.name}</strong>
+                <span className="block text-[#8b95a1] text-xs">{stock.stockCode}</span>
+              </div>
+              <div className="grid gap-0.75 text-right text-[#8b95a1] text-xs">
+                <span>{stock.market}</span>
+              </div>
+            </>
+          )
+
+          return (
+            <li key={stock.isinCode}>
+              {onSelect ? (
+                <button
+                  type="button"
+                  className="flex w-full items-center justify-between py-3.5 px-4 rounded-[14px] bg-white border-0 text-left text-inherit cursor-pointer transition-colors active:bg-[#f2f4f6]"
+                  onClick={() => onSelect(stock)}
+                >
+                  {itemContent}
+                </button>
+              ) : (
+                <div className="flex items-center justify-between py-3.5 px-4 rounded-[14px] bg-white">
+                  {itemContent}
+                </div>
+              )}
+            </li>
+          )
+        })}
       </ul>
     )
   })()

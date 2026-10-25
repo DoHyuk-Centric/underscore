@@ -117,6 +117,89 @@ export function selectArticles(
     }));
 }
 
+// "OO 주가, 9월 30일 장중 …", "애프터마켓 …"처럼 시세만 옮겨 적은 자동 생성 기사는 배경 설명이 없어 뺍니다.
+const PRICE_TICKER_TITLE_PATTERN = /주가,?\s*\d{1,2}월\s*\d{1,2}일\s*(장중|애프터마켓|프리마켓)/;
+// 요약에 이런 말이 있으면 숫자의 이유나 기대치를 설명하는 기사일 가능성이 높아 먼저 고릅니다.
+const EXPLANATION_PATTERN = /때문|덕분|힘입|견인|영향으로|배경|이유|호조|부진|증가로|감소로|상승으로|하락으로|전망치|컨센서스|예상치/;
+const PERIOD_SEARCH_DISPLAY = 100;
+// 검색어 하나가 결과를 독차지하지 않도록 검색어마다 고르는 기사 수를 제한합니다.
+const MAX_ARTICLES_PER_QUERY = 2;
+
+/**
+ * 기간(YYYY-MM-DD ~ YYYY-MM-DD)에 발행됐고 제목·요약에 종목명이 나오는 기사를 고릅니다.
+ * 검색어마다 이유를 설명하는 기사, 제목에 종목명이 있는 기사, 관련도가 높은 기사 순으로 최대 2건을 고르고,
+ * 앞선 검색어부터 limit건을 채운 뒤 발행일 순으로 반환합니다.
+ */
+export function selectArticlesBetween(
+  resultsByQuery: NaverNewsItem[][],
+  stockName: string,
+  beginDate: string,
+  endDate: string,
+  limit: number,
+): NewsArticle[] {
+  const seen = new Set<string>();
+  const picked: Omit<NewsArticle, 'id'>[] = [];
+
+  for (const items of resultsByQuery) {
+    const candidates = filterArticlesBetween(items, stockName, beginDate, endDate).filter(
+      (article) => !seen.has(article.url),
+    );
+    const best = candidates
+      .map((article, relevance) => ({ article, relevance, ...rankArticle(article, stockName) }))
+      .sort((a, b) => Number(b.explains) - Number(a.explains) || Number(b.titleMatch) - Number(a.titleMatch) || a.relevance - b.relevance)
+      .slice(0, MAX_ARTICLES_PER_QUERY)
+      .map(({ article }) => article);
+
+    for (const article of best) {
+      if (picked.length >= limit) break;
+      seen.add(article.url);
+      picked.push(article);
+    }
+  }
+
+  return picked
+    .sort((a, b) => a.publishedDate.localeCompare(b.publishedDate))
+    .map((article, index) => ({ id: index + 1, ...article }));
+}
+
+function rankArticle(article: Omit<NewsArticle, 'id'>, stockName: string) {
+  return {
+    explains: EXPLANATION_PATTERN.test(article.description),
+    titleMatch: normalize(article.title).includes(normalize(stockName)),
+  };
+}
+
+/** 기간 안에 발행됐고, 종목명이 나오며, 시세 자동 기사가 아닌 기사. 검색 결과(관련도) 순서를 유지합니다. */
+function filterArticlesBetween(
+  items: NaverNewsItem[],
+  stockName: string,
+  beginDate: string,
+  endDate: string,
+): Omit<NewsArticle, 'id'>[] {
+  const name = normalize(stockName);
+  const seen = new Set<string>();
+  const articles: Omit<NewsArticle, 'id'>[] = [];
+
+  for (const item of items) {
+    const published = new Date(item.pubDate);
+    if (Number.isNaN(published.getTime())) continue;
+
+    const publishedDate = toKstDate(published);
+    if (publishedDate < beginDate || publishedDate > endDate) continue;
+
+    const url = item.originallink || item.link;
+    const title = stripHtml(item.title);
+    const description = stripHtml(item.description);
+    if (seen.has(url) || PRICE_TICKER_TITLE_PATTERN.test(title)) continue;
+    if (!normalize(`${title} ${description}`).includes(name)) continue;
+
+    seen.add(url);
+    articles.push({ title, description, url, publishedDate });
+  }
+
+  return articles;
+}
+
 @Injectable()
 export class NaverNewsClient {
   isConfigured(): boolean {
@@ -144,11 +227,32 @@ export class NaverNewsClient {
     return selectArticles(results.flat(), baseDate, stockName);
   }
 
-  private async search(query: string): Promise<NaverNewsItem[]> {
+  /**
+   * 지난 기간(YYYY-MM-DD ~ YYYY-MM-DD)의 기사를 찾습니다. 검색 API에 기간 조건이 없어서
+   * 관련도순으로 넉넉히 받은 뒤 발행일로 거릅니다. 최신순이면 오래전 기간의 기사가 밀려납니다.
+   */
+  async searchNewsBetween(
+    stockName: string,
+    queries: string[],
+    beginDate: string,
+    endDate: string,
+    limit: number,
+  ): Promise<NewsArticle[]> {
+    const results = await Promise.all(
+      queries.map((query) => this.search(query, { display: PERIOD_SEARCH_DISPLAY, sort: 'sim' })),
+    );
+
+    return selectArticlesBetween(results, stockName, beginDate, endDate, limit);
+  }
+
+  private async search(
+    query: string,
+    { display = SEARCH_DISPLAY, sort = 'date' }: { display?: number; sort?: 'date' | 'sim' } = {},
+  ): Promise<NaverNewsItem[]> {
     const response = await axios.get<{ items?: NaverNewsItem[] }>(
       NAVER_NEWS_SEARCH_URL,
       {
-        params: { query, display: SEARCH_DISPLAY, sort: 'date' },
+        params: { query, display, sort },
         headers: {
           'X-NCP-APIGW-API-KEY-ID': process.env.NAVER_API_HUB_CLIENT_ID,
           'X-NCP-APIGW-API-KEY': process.env.NAVER_API_HUB_CLIENT_SECRET,

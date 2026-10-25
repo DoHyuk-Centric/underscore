@@ -191,27 +191,62 @@ export class DartClient {
         Date.now(),
       ),
     );
-    const items = (
+    return this.getDisclosuresBetween(corpCode, toDartDate(begin), toDartDate(end));
+  }
+
+  /**
+   * 기간(YYYYMMDD~YYYYMMDD)에 접수된 공시 원문 발췌. 기본은 최근 공시부터 limit건까지 가져옵니다.
+   * priority를 주면 제목의 중요도(작을수록 먼저)로 limit건을 고른 뒤, 접수일 순서로 돌려줍니다.
+   */
+  async getDisclosuresBetween(
+    corpCode: string,
+    beginDate: string,
+    endDate: string,
+    {
+      limit = MAX_DISCLOSURES,
+      excerptLength = DISCLOSURE_EXCERPT_LENGTH,
+      noisePattern = NOISE_REPORT_PATTERN,
+      priority,
+    }: {
+      limit?: number;
+      excerptLength?: number;
+      noisePattern?: RegExp;
+      priority?: (title: string) => number;
+    } = {},
+  ): Promise<DartDisclosure[]> {
+    const candidates = (
       await this.listDisclosures({
         corp_code: corpCode,
-        bgn_de: toDartDate(begin),
-        end_de: toDartDate(end),
+        bgn_de: beginDate,
+        end_de: endDate,
       })
-    )
-      .filter((item) => !NOISE_REPORT_PATTERN.test(item.report_nm))
-      .slice(0, MAX_DISCLOSURES);
+    ).filter((item) => !noisePattern.test(item.report_nm));
+
+    const items = priority
+      ? candidates
+          .map((item, recency) => ({ item, recency, rank: priority(item.report_nm) }))
+          .sort((a, b) => a.rank - b.rank || a.recency - b.recency)
+          .slice(0, limit)
+          .map(({ item }) => item)
+          .sort((a, b) => a.rcept_dt.localeCompare(b.rcept_dt) || a.rcept_no.localeCompare(b.rcept_no))
+      : candidates.slice(0, limit);
 
     const disclosures: DartDisclosure[] = [];
 
     for (const item of items) {
-      const text = await this.getDocumentText(item.rcept_no);
+      // 첨부 정정처럼 본문 파일이 없는 공시가 있어도 나머지 공시는 그대로 씁니다.
+      const text = await this.getDocumentText(item.rcept_no).catch((error: unknown) => {
+        this.logger.warn(`공시 원문을 받지 못해 건너뜁니다 (${item.rcept_no})`, error);
+        return null;
+      });
+      if (text === null) continue;
 
       disclosures.push({
         id: disclosures.length + 1,
         title: item.report_nm.trim(),
         receivedDate: formatDartDate(item.rcept_dt),
         url: `${DART_VIEWER_URL}?rcpNo=${item.rcept_no}`,
-        excerpt: text.replace(/\n+/g, ' ').slice(0, DISCLOSURE_EXCERPT_LENGTH),
+        excerpt: text.replace(/\n+/g, ' ').slice(0, excerptLength),
       });
     }
 

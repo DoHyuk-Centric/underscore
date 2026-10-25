@@ -9,6 +9,7 @@ import HistoryPage from './pages/HistoryPage'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import StockDetailPage from './pages/StockDetailPage'
+import TradeReviewResultPage from './pages/TradeReviewResultPage'
 import { useDailyPopularDataSync } from './hooks/useDailyPopularDataSync'
 
 // AI 진단 버전 비교는 개발 서버에서만 여는 내부 도구라 배포 빌드에는 포함하지 않습니다.
@@ -42,6 +43,7 @@ const App = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/guide" element={<GuidePage />} />
       <Route path="/stocks/:stockCode" element={<StockDetailPage />} />
+      <Route path="/ai/review" element={<TradeReviewResultPage />} />
       {DiagnosisComparePage ? (
         <Route
           path="/dev/diagnosis-compare"
